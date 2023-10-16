@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_text_detect_by_area/flutter_text_detect_by_area.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(const MyApp());
@@ -49,6 +51,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  final ImagePicker _picker = ImagePicker();
 
   void _incrementCounter() {
     setState(() {
@@ -59,6 +62,12 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+    _picker.pickImage(source: ImageSource.gallery).then((value){
+      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SelectImageAreaTextDetect(imagePath: value?.path??'', onSelectArea: (v) {
+        print("Detected Value :: $v");
+      })));
+    });
+
   }
 
   @override

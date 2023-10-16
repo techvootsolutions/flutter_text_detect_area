@@ -9,17 +9,17 @@ import 'package:flutter_text_detect_by_area/src/Utils/Helper/storage_helper.dart
 import 'package:google_ml_vision/google_ml_vision.dart';
 import 'package:photo_view/photo_view.dart';
 
-class UploadPhotoConfirmScreen extends StatefulWidget {
-  const UploadPhotoConfirmScreen({Key? key, required this.path,required this.onSelectArea}) : super(key: key);
-  final String path;
+class SelectImageAreaTextDetect extends StatefulWidget {
+  const SelectImageAreaTextDetect({Key? key, required this.imagePath,required this.onSelectArea}) : super(key: key);
+  final String imagePath;
   final void Function(dynamic) onSelectArea;
 
   @override
-  _UploadPhotoConfirmScreenState createState() =>
-      _UploadPhotoConfirmScreenState();
+  _SelectImageAreaTextDetectState createState() =>
+      _SelectImageAreaTextDetectState();
 }
 
-class _UploadPhotoConfirmScreenState extends State<UploadPhotoConfirmScreen> {
+class _SelectImageAreaTextDetectState extends State<SelectImageAreaTextDetect> {
 
   late File image;
   String fileName = '/TEMP_IMG.jpg';
@@ -51,7 +51,7 @@ class _UploadPhotoConfirmScreenState extends State<UploadPhotoConfirmScreen> {
   @override
   void initState() {
     super.initState();
-    image = File(widget.path);
+    image = File(widget.imagePath);
     initTempImage();
   }
   @override
@@ -91,21 +91,6 @@ class _UploadPhotoConfirmScreenState extends State<UploadPhotoConfirmScreen> {
                             final GoogleVisionImage visionImage = GoogleVisionImage.fromFile(File(tempPath));
                             var results = await _recognizer.processImage(visionImage);
                             var value = results.text!.replaceAll("\n", " ");
-                            /*print(results.text);
-                              for (final TextBlock block in results.blocks) {
-                                for (final TextLine line in block.lines) {
-                                  print(line.text);
-                                }
-                              }*/
-                            // if(itemProcessIndex==2&&myProductModel.item!.isEmpty){
-                            //   print("item");
-                            //   myProductModel.item =value;
-                            // }else if(itemProcessIndex==3&&myProductModel.price!.isEmpty){
-                            //   print("price");
-                            //   myProductModel.price =value;
-                            //   items.add(myProductModel);
-                            //   myProductModel = MyProductModel(price: "",item: "");
-                            // }
                             widget.onSelectArea(value);
                             isProcessing = false;
                           },
