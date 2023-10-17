@@ -51,6 +51,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String detectedValue = "Detected Value :";
   final ImagePicker _picker = ImagePicker();
 
   void _incrementCounter() {
@@ -65,6 +66,9 @@ class _MyHomePageState extends State<MyHomePage> {
     _picker.pickImage(source: ImageSource.gallery).then((value){
       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SelectImageAreaTextDetect(imagePath: value?.path??'', onSelectArea: (v) {
         print("Detected Value :: $v");
+        setState(() {
+          detectedValue = "Detected Value : \n $v";
+        });
       })));
     });
 
@@ -110,6 +114,10 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            Text(
+              detectedValue,
+              style: Theme.of(context).textTheme.titleSmall,
             ),
 
           ],
