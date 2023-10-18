@@ -133,14 +133,15 @@ class _SelectImageAreaTextDetectProviderState extends State<SelectImageAreaTextD
                             // state.isProcessing == false ?
                             Crop(
                               onStatusChanged: state.onCropStatusChanged,
-                              baseColor: Colors.black,
+                              baseColor: Colors.transparent,
+                              maskColor: state.isImageLoading || state.isProcessing || state.itemProcessIndex == 1 ? Colors.transparent : null,
                               controller: state.cropController,
                               initialSize: 0.25,
                               image:imageData ?? File(widget.imagePath).readAsBytesSync(),
-                              cornerDotBuilder: (size, cornerIndex) {return const DotControl(color: Colors.black,);},
+                              cornerDotBuilder: (size, cornerIndex) {return DotControl(color: state.isImageLoading || state.isProcessing || state.itemProcessIndex == 1 ? Colors.transparent : Colors.black,);},
                               onCropped: (v){ state.onCropped(context,v); },
                             ),
-                            state.isImageLoading ? loader : Container(),
+                            state.isImageLoading ? const Center(child: CircularProgressIndicator(color: Colors.white)) : Container(),
                           ]
                         )),
                     Container(
