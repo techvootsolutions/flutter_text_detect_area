@@ -145,7 +145,6 @@ class _SelectImageAreaTextDetectProviderState extends State<SelectImageAreaTextD
                             Center(child: state.isProcessing == true ? const CircularProgressIndicator(color: Colors.white) : state.itemProcessIndex == -1 || state.itemProcessIndex == 3 ?
                             PhotoView(imageProvider: FileImage(File(widget.imagePath)))
                                 :Crop(
-                              key: UniqueKey(),
                               baseColor: Colors.black,
                               controller: state.cropController,
                               initialSize: 0.25,

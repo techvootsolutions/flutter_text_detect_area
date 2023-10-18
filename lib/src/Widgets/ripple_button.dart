@@ -5,32 +5,46 @@ class RippleButton extends StatelessWidget {
   RippleButton({
     super.key,
     this.height,
-    this.top,
+    this.margin,
+    this.padding,
     required this.child,
     this.bgColor,
+    this.shadowColor,
     this.borderColor,
     this.borderWidth,
     this.buttonWidth,
+    this.shadowBlurRadius,
+    this.shadowSpreadRadius,
+    this.shadowOffset,
     this.onTap
   });
 
-  double? height = 50;
-  double? top = 0;
-  double? borderWidth = 0;
+  double? height;
+  EdgeInsets? margin;
+  EdgeInsets? padding;
+  double? borderWidth;
   VoidCallback? onTap;
-  double? buttonWidth = double.infinity;
+  double? buttonWidth;
+  double? shadowBlurRadius;
+  double? shadowSpreadRadius;
+  Offset? shadowOffset;
   Widget? child;
-  Color? bgColor = Colors.white;
-  Color? borderColor = Colors.transparent;
+  Color? bgColor;
+  Color? shadowColor;
+  Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
       return Container(
         height: height ?? 50,
         width: buttonWidth ?? double.infinity,
-        margin: EdgeInsets.only(top: top ?? 0),
+        margin: margin,
+        padding: padding,
         child: Container(
           decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(color: shadowColor ?? Colors.black.withOpacity(0.25),blurRadius: shadowBlurRadius ?? 10, spreadRadius: shadowSpreadRadius ?? 0, offset: shadowOffset ?? Offset(0, 5))
+              ],
               borderRadius: BorderRadius.circular(10),
               color: bgColor,
               border: Border.all(
