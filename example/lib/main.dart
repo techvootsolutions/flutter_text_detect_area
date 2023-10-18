@@ -94,11 +94,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 bgColor: Colors.lightBlue,
                 child: InkWell(
                   onTap: (){
+                    setState(() { detectedValue = ""; });
                     _picker.pickImage(source: ImageSource.gallery).then((value){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SelectImageAreaTextDetect(imagePath: value?.path??'', onSelectArea: (v) {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => SelectImageAreaTextDetect(detectOnce: false, imagePath: value?.path??'', onDetectText: (v) {
                         print("Detected Value :: $v");
                         setState(() {
-                          detectedValue = v;
+                          if(v is String){
+                            detectedValue = v;
+                          }
+                          if(v is List){
+                            int counter = 0;
+                            v.forEach((element) {
+                              detectedValue += "$counter. $element \n";
+                              counter++;
+                            });
+                          }
                         });
                       })));
                     });
@@ -109,8 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 20),
               Text('Detected values :', style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 20),
-              Text(detectedValue, style: Theme.of(context).textTheme.bodyMedium),
-
+              Text(detectedValue, style: Theme.of(context).textTheme.bodyMedium)
             ],
           ),
         ),

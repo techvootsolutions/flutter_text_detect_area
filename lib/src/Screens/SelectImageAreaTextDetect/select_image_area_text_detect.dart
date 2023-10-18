@@ -1,32 +1,40 @@
 import 'dart:io';
-
+import 'dart:typed_data';
 import 'package:crop_your_image/crop_your_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_text_detect_by_area/src/Element/padding_class.dart';
 import 'package:flutter_text_detect_by_area/src/Style/text_style.dart';
 import 'package:flutter_text_detect_by_area/src/Utils/Notifier/select_image_area_text_detect_notifier.dart';
 import 'package:flutter_text_detect_by_area/src/Widgets/ripple_button.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 
 class SelectImageAreaTextDetect extends StatelessWidget{
-  const SelectImageAreaTextDetect({super.key,required this.imagePath,required this.onSelectArea});
+  const SelectImageAreaTextDetect({super.key,required this.imagePath,required this.onDetectText,this.detectOnce = true});
+      // : assert(imagePath != "", 'Require Image Path for detect text $imagePath');
   final String imagePath;
-  final void Function(dynamic) onSelectArea;
+  final bool detectOnce;
+  final void Function(dynamic) onDetectText;
   @override
   Widget build(BuildContext context) {
+    print("Image path $imagePath");
+    if(imagePath.isEmpty){
+      Navigator.of(context).pop();
+      return Container();
+    }
    return ChangeNotifierProvider(
        create: (_) => SelectImageAreaTextDetectNotifier(),
-      child: SelectImageAreaTextDetectProvider(imagePath: imagePath, onSelectArea: onSelectArea,),
+      child: SelectImageAreaTextDetectProvider(imagePath: imagePath, onSelectArea: onDetectText,detectOnce: detectOnce,),
    );
   }
 
 }
 
 class SelectImageAreaTextDetectProvider extends StatefulWidget {
-  const SelectImageAreaTextDetectProvider({Key? key, required this.imagePath,required this.onSelectArea}) : super(key: key);
+  const SelectImageAreaTextDetectProvider({super.key, required this.imagePath,required this.onSelectArea, this.detectOnce = true});
+      // : assert(imagePath != "", 'Require Image Path for detect text $imagePath');
   final String imagePath;
   final SelectAreaCallBack onSelectArea;
+  final bool detectOnce;
 
   @override
   _SelectImageAreaTextDetectProviderState createState() =>
@@ -34,13 +42,14 @@ class SelectImageAreaTextDetectProvider extends StatefulWidget {
 }
 
 class _SelectImageAreaTextDetectProviderState extends State<SelectImageAreaTextDetectProvider> {
-
+  Uint8List? imageData;
   @override
   void initState() {
     super.initState();
+    imageData = File(widget.imagePath).readAsBytesSync();
    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
      var state  = Provider.of<SelectImageAreaTextDetectNotifier>(context,listen: false);
-     state.initState(widget.imagePath,widget.onSelectArea);
+     state.initState(widget.imagePath,widget.onSelectArea, widget.detectOnce ?? true);
    });
   }
 
@@ -49,6 +58,9 @@ class _SelectImageAreaTextDetectProviderState extends State<SelectImageAreaTextD
     var size = MediaQuery.of(context).size;
     return Consumer<SelectImageAreaTextDetectNotifier>(
       builder: (context, state, child) {
+
+        Widget loader = const Flexible(child: Center(child: CircularProgressIndicator(color: Colors.white)));
+
         Widget buildInstruct(Size size) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,28 +84,13 @@ class _SelectImageAreaTextDetectProviderState extends State<SelectImageAreaTextD
                     onTap: (){ state.navigateBackScreen(context); },
                     buttonWidth: size.width * 0.4,
                     child: Center(child: Text("Nah! Retake!", style: TextStyleTheme.customTextStyle(Colors.white, 16, FontWeight.w500))),),
-                  RippleButton(bgColor: Colors.blue, onTap: () { state.cropImageFor(); }, buttonWidth: size.width * 0.4, child: Center(child: Text("Detect", style: TextStyleTheme.customTextStyle(Colors.white, 16, FontWeight.w500))),
+                  state.isProcessing ? loader
+                      :RippleButton(
+                    isDisable: state.isProcessing || state.isImageLoading,
+                    bgColor: Colors.blue, onTap: () { state.cropImageFor(); }, buttonWidth: size.width * 0.4, child: Center(child: Text("Detect", style: TextStyleTheme.customTextStyle(Colors.white, 16, FontWeight.w500))),
                   ),
                 ],
               )
-            ],
-          );
-        }
-
-        Widget buildConfirmButtons(Size size) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              RippleButton(
-                  bgColor: Colors.red,
-                  onTap: (){ state.navigateBackScreen(context); },
-                  buttonWidth: size.width * 0.4,
-                  child: Center(child: Text("Nah! Retake!", style: TextStyleTheme.customTextStyle(Colors.white, 16, FontWeight.w500))),),
-              RippleButton(
-                  bgColor: Colors.blueAccent,
-                  onTap: () { state.itemProcessIndex = 1; state.notifyListeners(); },
-                  buttonWidth: size.width * 0.4,
-                  child: Center(child: Text("That's Good!", style: TextStyleTheme.customTextStyle(Colors.white, 16, FontWeight.w500))))
             ],
           );
         }
@@ -103,26 +100,17 @@ class _SelectImageAreaTextDetectProviderState extends State<SelectImageAreaTextD
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               RippleButton(
+                isDisable: state.isProcessing || state.isImageLoading,
                 bgColor:Colors.blueAccent,
-                onTap: (){ state.itemProcessIndex = 1; state.notifyListeners(); },
+                onTap: (){ state.itemProcessIndex = 0; state.notifyListeners(); },
                 buttonWidth: size.width * 0.56,
                 child: Center(child: Text("High Light More Text", style: TextStyleTheme.customTextStyle(Colors.white, 16, FontWeight.w500))),),
-              RippleButton(
-                bgColor: Colors.lightBlueAccent, onTap: () {
-                // showGeneralDialog(
-                //     context: context,
-                //     barrierColor: Colors.black45,
-                //     transitionDuration: const Duration(milliseconds: 0),
-                //     pageBuilder: (BuildContext buildContext, Animation animation, Animation secondaryAnimation) {
-                //       return AlertMyProductList(items: items,image: image,);
-                //     }).then((value) => null);
-                // for(var v in items){
-                //   print("item : ${v.item} , price : ${v.price}");
-                // }
-                //push(context, UploadProductDetailsScreen(img: image,),isAnimate: true);
-              },
+                state.isProcessing ? loader
+                    : RippleButton(
+                isDisable: state.isProcessing || state.isImageLoading,
+                bgColor: Colors.lightBlueAccent, onTap: () { state.onTapDone(context); },
                 buttonWidth: size.width * 0.3,
-                child: Center(child: Text("Next", style: TextStyleTheme.customTextStyle(Colors.white, 16, FontWeight.w500))),)
+                child: Center(child: Text("Done", style: TextStyleTheme.customTextStyle(Colors.white, 16, FontWeight.w500))),)
             ],
           );
         }
@@ -142,18 +130,19 @@ class _SelectImageAreaTextDetectProviderState extends State<SelectImageAreaTextD
                     Expanded(
                         child: Stack(
                           children: [
-                            Center(child: state.isProcessing == true ? const CircularProgressIndicator(color: Colors.white) : state.itemProcessIndex == -1 || state.itemProcessIndex == 3 ?
-                            PhotoView(imageProvider: FileImage(File(widget.imagePath)))
-                                :Crop(
-                              baseColor: Colors.black,
+                            // state.isProcessing == false ?
+                            Crop(
+                              onStatusChanged: state.onCropStatusChanged,
+                              baseColor: Colors.transparent,
+                              maskColor: state.isImageLoading || state.isProcessing || state.itemProcessIndex == 1 ? Colors.transparent : null,
                               controller: state.cropController,
                               initialSize: 0.25,
-                              image:File(widget.imagePath).readAsBytesSync(),
-                              cornerDotBuilder: (size, cornerIndex) {return const DotControl(color: Colors.black,);},
+                              image:imageData ?? File(widget.imagePath).readAsBytesSync(),
+                              cornerDotBuilder: (size, cornerIndex) {return DotControl(color: state.isImageLoading || state.isProcessing || state.itemProcessIndex == 1 ? Colors.transparent : Colors.black,);},
                               onCropped: (v){ state.onCropped(context,v); },
                             ),
-                            )
-                          ],
+                            state.isImageLoading ? const Center(child: CircularProgressIndicator(color: Colors.white)) : Container(),
+                          ]
                         )),
                     Container(
                       height: size.height * 0.18,
@@ -161,14 +150,9 @@ class _SelectImageAreaTextDetectProviderState extends State<SelectImageAreaTextD
                       color: Colors.black,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            state.itemProcessIndex == -1
-                                ? buildConfirmButtons(size)
-                                : state.itemProcessIndex == 3 ? buildLastButtons(size) : buildInstruct(size)
-                          ],
-                        ),
+                        child: Center(child: state.itemProcessIndex == 1 && widget.detectOnce == false
+                            ? buildLastButtons(size)
+                            : buildInstruct(size)),
                       ),
                     )
                   ],

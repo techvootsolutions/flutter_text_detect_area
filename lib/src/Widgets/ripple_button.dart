@@ -7,6 +7,7 @@ class RippleButton extends StatelessWidget {
     this.height,
     this.margin,
     this.padding,
+    this.isDisable,
     required this.child,
     this.bgColor,
     this.shadowColor,
@@ -29,6 +30,7 @@ class RippleButton extends StatelessWidget {
   double? shadowSpreadRadius;
   Offset? shadowOffset;
   Widget? child;
+  bool? isDisable;
   Color? bgColor;
   Color? shadowColor;
   Color? borderColor;
@@ -54,7 +56,7 @@ class RippleButton extends StatelessWidget {
           child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: onTap,
+                onTap: isDisable == true ? null :onTap,
                 borderRadius: BorderRadius.circular(10),
                 child: child,
               )),

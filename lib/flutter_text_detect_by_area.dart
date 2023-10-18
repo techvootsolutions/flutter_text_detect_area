@@ -6,8 +6,3 @@ export 'src/Screens/SelectImageAreaTextDetect/select_image_area_text_detect.dart
 ///CustomRippleButton
 export 'src/Widgets/ripple_button.dart';
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}

@@ -8,17 +8,48 @@ import 'package:google_ml_vision/google_ml_vision.dart';
 
 typedef SelectAreaCallBack = void Function(dynamic p1);
 
+class CustomException implements Exception {
+  final message;
+  final prefix;
+
+  CustomException([this.message, this.prefix]);
+
+  @override
+  String toString() {
+    return "$prefix$message";
+  }
+}
+
+class TextDetectException extends CustomException {
+  TextDetectException([String? message])
+      : super(message, "Unable to detect text");
+}
+
 class SelectImageAreaTextDetectNotifier extends ChangeNotifier{
   String fileName = '/TEMP_IMG.jpg';
   String tempPath = "";
   String selectedImagePath = "";
   final cropController = CropController();
-  var itemProcessIndex = -1;//0 for confirm,1 for item,2 for price,3 for one more highlight
+  var itemProcessIndex = 0;/// 0 for detect text once,1 for detect text more
   final TextRecognizer recognizer = GoogleVision.instance.textRecognizer();
+
   var isProcessing = false;
+  var isImageLoading = true;
+  var detectOneTime = false;
+
+  bool isDisposed = false;///To prevent Unhandled Exception: A ChangeNotifier was used after being disposed.
+
+  List detectedValues = [];
+
   SelectAreaCallBack? onSelectArea;
-  set isSetProcessing(bool value) {
+
+  set setProcessing(bool value) {
       isProcessing = value;
+      print("isProcessing $value");
+      notifyListeners();
+  }
+  set setImageLoading(bool value) {
+      isImageLoading = value;
       notifyListeners();
   }
   
@@ -29,9 +60,10 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier{
       notifyListeners();
   }
 
-  void initState(String imagePath,SelectAreaCallBack onSelectArea ){
+  void initState(String imagePath,SelectAreaCallBack onSelectArea, bool isDetectOnce){
     this.onSelectArea = onSelectArea;
-    this.selectedImagePath = imagePath;
+    selectedImagePath = imagePath;
+    detectOneTime = isDetectOnce;
     initTempImage();
   }
 
@@ -43,20 +75,30 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier{
     try {
       var results = await recognizer.processImage(visionImage);
       value = results.text!.replaceAll("\n", " ");
-
-    }catch(e){
-      value = "GoogleVisionImage Exception : $e";
-      print(value);
+    } catch(e) {
+      print("TextDetectException : $e");
+      throw TextDetectException(e.toString());
     }
-    onSelectArea?.call(value);
-    await Future.delayed(const Duration(milliseconds: 1500));
-    isSetProcessing = false;
-    Navigator.of(context).pop();
-
+    setProcessing = false;
+    print("detectOneTime $detectOneTime :: itemProcessIndex $itemProcessIndex");
+    if(detectOneTime && itemProcessIndex == 0){
+      onSelectArea?.call(detectOneTime ? value : detectedValues);
+      Navigator.of(context).pop();
+    } else {
+      itemProcessIndex = 1;
+      detectedValues.add(value);
+      notifyListeners();
+    }
   }
 
   void navigateBackScreen(BuildContext context) {
     Navigator.pop(context);
+  }
+
+  void onCropStatusChanged(CropStatus status) {
+    if(status == CropStatus.ready){
+      setImageLoading = false;
+    }
   }
 
   void initTempImage()async{
@@ -65,18 +107,30 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier{
     notifyListeners();
   }
 
+  void onTapDone(BuildContext context){
+    onSelectArea?.call(detectedValues);
+    Navigator.of(context).pop();
+  }
+
   void cropImageFor(){
-    isSetProcessing = true;
     cropController.crop();
     croppedData = null;
-    notifyListeners();
+    setProcessing = true;
   }
 
   @override
+  void notifyListeners() {
+    if(!isDisposed) {
+      super.notifyListeners();
+    }
+  }
+  @override
   void dispose() {
     File(tempPath).deleteSync();
+    isDisposed = true;
     super.dispose();
   }
+
 
 
 }
