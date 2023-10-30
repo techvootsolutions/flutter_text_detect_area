@@ -12,11 +12,13 @@ class SelectImageAreaTextDetect extends StatelessWidget{
   const SelectImageAreaTextDetect({super.key,required this.imagePath,required this.onDetectText,this.detectOnce = true});
       // : assert(imagePath != "", 'Require Image Path for detect text $imagePath');
   final String imagePath;
+  ///Pass detectOnce as true if you want to detect multiple text on image
+  ///after detection done press done for get detected text's as List ['text1','text2',.....'textN']
   final bool detectOnce;
   final void Function(dynamic) onDetectText;
   @override
   Widget build(BuildContext context) {
-    print("Image path $imagePath");
+    print("Image path For detect texts:: $imagePath");
     if(imagePath.isEmpty){
       Navigator.of(context).pop();
       return Container();
@@ -84,8 +86,8 @@ class _SelectImageAreaTextDetectProviderState extends State<SelectImageAreaTextD
                     onTap: (){ state.navigateBackScreen(context); },
                     buttonWidth: size.width * 0.4,
                     child: Center(child: Text("Nah! Retake!", style: TextStyleTheme.customTextStyle(Colors.white, 16, FontWeight.w500))),),
-                  state.isProcessing ? loader
-                      :RippleButton(
+                  state.isProcessing ? loader :
+                  RippleButton(
                     isDisable: state.isProcessing || state.isImageLoading,
                     bgColor: Colors.blue, onTap: () { state.cropImageFor(); }, buttonWidth: size.width * 0.4, child: Center(child: Text("Detect", style: TextStyleTheme.customTextStyle(Colors.white, 16, FontWeight.w500))),
                   ),
@@ -95,14 +97,17 @@ class _SelectImageAreaTextDetectProviderState extends State<SelectImageAreaTextD
           );
         }
 
-        Widget buildLastButtons(Size size) {
+        Widget buildHighLightMoreButtons(Size size) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // InkWell(
+              //   onTap: state.isProcessing || state.isImageLoading? null :(){ state.itemProcessIndex = 0; state.notifyListeners(); },
+              // ),
               RippleButton(
                 isDisable: state.isProcessing || state.isImageLoading,
                 bgColor:Colors.blueAccent,
-                onTap: (){ state.itemProcessIndex = 0; state.notifyListeners(); },
+                onTap: state.isProcessing || state.isImageLoading? null :(){ state.itemProcessIndex = 0; state.notifyListeners(); },
                 buttonWidth: size.width * 0.56,
                 child: Center(child: Text("High Light More Text", style: TextStyleTheme.customTextStyle(Colors.white, 16, FontWeight.w500))),),
                 state.isProcessing ? loader
@@ -151,7 +156,7 @@ class _SelectImageAreaTextDetectProviderState extends State<SelectImageAreaTextD
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Center(child: state.itemProcessIndex == 1 && widget.detectOnce == false
-                            ? buildLastButtons(size)
+                            ? buildHighLightMoreButtons(size)
                             : buildInstruct(size)),
                       ),
                     )
