@@ -4,9 +4,11 @@ import 'package:crop_your_image/crop_your_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_text_detect_by_area/src/Utils/Helper/storage_helper.dart';
-import 'package:google_ml_vision/google_ml_vision.dart';
+// import 'package:google_ml_vision/google_ml_vision.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 typedef SelectAreaCallBack = void Function(dynamic p1);
+typedef OnDetectErrorCallBack = void Function(dynamic error);
 
 class CustomException implements Exception {
   final message;
@@ -31,7 +33,7 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier{
   String selectedImagePath = "";
   final cropController = CropController();
   var itemProcessIndex = 0;/// 0 for detect text once,1 for detect text more
-  final TextRecognizer recognizer = GoogleVision.instance.textRecognizer();
+  // final TextRecognizer recognizer = GoogleVision.instance.textRecognizer();
 
   var isProcessing = false;
   var isImageLoading = true;
@@ -42,10 +44,10 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier{
   List detectedValues = [];
 
   SelectAreaCallBack? onSelectArea;
+  OnDetectErrorCallBack? onDetectError;
 
   set setProcessing(bool value) {
       isProcessing = value;
-      print("isProcessing $value");
       notifyListeners();
   }
   set setImageLoading(bool value) {
@@ -60,8 +62,9 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier{
       notifyListeners();
   }
 
-  void initState(String imagePath,SelectAreaCallBack onSelectArea, bool isDetectOnce){
+  void initState(String imagePath,SelectAreaCallBack onSelectArea,OnDetectErrorCallBack onDetectError,bool isDetectOnce){
     this.onSelectArea = onSelectArea;
+    this.onDetectError = onDetectError;
     selectedImagePath = imagePath;
     detectOneTime = isDetectOnce;
     initTempImage();
@@ -70,17 +73,25 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier{
   void onCropped(BuildContext context,Uint8List cropped) async {
     setCroppedData = cropped;
     await File(tempPath).writeAsBytes(croppedData!);
-    final GoogleVisionImage visionImage = GoogleVisionImage.fromFile(File(tempPath));
+
+    // final GoogleVisionImage visionImage = GoogleVisionImage.fromFile(File(tempPath));
     var value;
+    // try {
+    //   var results = await recognizer.processImage(visionImage);
+    //   value = results.text!.replaceAll("\n", " ");
+    // } catch(e) {
+    //   print("TextDetectException : $e");
+    //   throw TextDetectException(e.toString());
+    // }
     try {
-      var results = await recognizer.processImage(visionImage);
-      value = results.text!.replaceAll("\n", " ");
+      var results = await TextRecognizer(script: TextRecognitionScript.latin).processImage(InputImage.fromFilePath(tempPath));
+      value = results.text.replaceAll("\n", " ");
     } catch(e) {
-      print("TextDetectException : $e");
-      throw TextDetectException(e.toString());
+      onDetectError?.call(e);
+      // value = TextDetectException(e.toString());
+      // throw TextDetectException(e.toString());
     }
     setProcessing = false;
-    print("detectOneTime $detectOneTime :: itemProcessIndex $itemProcessIndex");
     if(detectOneTime && itemProcessIndex == 0){
       onSelectArea?.call(detectOneTime ? value : detectedValues);
       Navigator.of(context).pop();
@@ -126,11 +137,11 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier{
   }
   @override
   void dispose() {
-    File(tempPath).deleteSync();
+    if(tempPath.isNotEmpty) {
+      File(tempPath).deleteSync();
+    }
     isDisposed = true;
     super.dispose();
   }
-
-
 
 }

@@ -1,5 +1,6 @@
 # This is a generated file; do not edit or check into version control.
-google_ml_vision=/Users/kevinbaldha/.pub-cache/hosted/pub.dev/google_ml_vision-0.0.8/
+google_mlkit_commons=/Users/kevinbaldha/.pub-cache/hosted/pub.dev/google_mlkit_commons-0.5.0/
+google_mlkit_text_recognition=/Users/kevinbaldha/.pub-cache/hosted/pub.dev/google_mlkit_text_recognition-0.10.0/
 path_provider=/Users/kevinbaldha/.pub-cache/hosted/pub.dev/path_provider-2.1.1/
 path_provider_android=/Users/kevinbaldha/.pub-cache/hosted/pub.dev/path_provider_android-2.2.0/
 path_provider_foundation=/Users/kevinbaldha/.pub-cache/hosted/pub.dev/path_provider_foundation-2.3.1/
