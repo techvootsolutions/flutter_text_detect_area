@@ -84,7 +84,7 @@ You can learn more from example project [here](https://github.com/techvootsoluti
 
 ### Main Contributors
 <ul>
-  <li><a href="https://github.com/tvTushar">Tushar Chovatiya</a></li>
+  <li><a href="https://github.com/tvTushar"><b>Tushar Chovatiya</b></a></li>
   <li><a href="https://github.com/tvPrincy">Princy Varsani</a></li>
   <li><a href="https://github.com/techkevin">Kevin Baldha</a></li>
 </ul>
