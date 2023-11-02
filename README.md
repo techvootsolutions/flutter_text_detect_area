@@ -8,16 +8,16 @@ Flutter Text Detect Area's text recognition can recognize/detect text from image
 
 1.  Add dependency to `pubspec.yaml`
 
-    *Get the latest version in the 'Installing' tab on [pub.dev](https://pub.dev/packages/flutter_widget_catalogue)*
+    *Get the latest version in the 'Installing' tab on [pub.dev](https://pub.dev/packages/flutter_text_detect_area)*
 
 ```dart
   dependencies:
-      flutter_widget_catalogue: <latest-version>
+      flutter_text_detect_area: <latest-version>
 ```
 
 2.  Import the package
 ```dart
-import 'package:flutter_widget_catalogue/flutter_widget_catalogue.dart';
+import 'package:flutter_text_detect_area/flutter_text_detect_area.dart';
 ```
 ​
 ### Pick Image
@@ -87,6 +87,7 @@ You can learn more from example project [here](https://github.com/techvootsoluti
 
 ### Main Contributors
 <ul>
+  <li><a href="https://github.com/tvTushar"><b>Tushar Chovatiya</b></a></li>
   <li><a href="https://github.com/tvPrincy"><b>Princy Varsani</b></a></li>
   <li><a href="https://github.com/techkevin">Kevin Baldha</a></li>
 </ul>
