@@ -2,10 +2,10 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:crop_your_image/crop_your_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_text_detect_by_area/src/Element/padding_class.dart';
-import 'package:flutter_text_detect_by_area/src/Style/text_style.dart';
-import 'package:flutter_text_detect_by_area/src/Utils/Notifier/select_image_area_text_detect_notifier.dart';
-import 'package:flutter_text_detect_by_area/src/Widgets/ripple_button.dart';
+import 'package:flutter_text_detect_area/src/Element/padding_class.dart';
+import 'package:flutter_text_detect_area/src/Style/text_style.dart';
+import 'package:flutter_text_detect_area/src/Utils/Notifier/select_image_area_text_detect_notifier.dart';
+import 'package:flutter_text_detect_area/src/Widgets/ripple_button.dart';
 import 'package:provider/provider.dart';
 
 class SelectImageAreaTextDetect extends StatelessWidget{
