@@ -29,10 +29,11 @@ Widget paddingBottom(double bottom) {
 }
 
 ///Padding set All Side Different
-Widget paddingAllDifferent(double top,double right, double bottom, double left) {
+Widget paddingAllDifferent(
+    double top, double right, double bottom, double left) {
   return Padding(
-      padding: EdgeInsets.only(top: top, right: right, bottom: bottom, left: left)
-  );
+      padding:
+          EdgeInsets.only(top: top, right: right, bottom: bottom, left: left));
 }
 
 ///Padding All

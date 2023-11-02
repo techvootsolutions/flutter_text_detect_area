@@ -27,19 +27,23 @@ class TextDetectException extends CustomException {
       : super(message, "Unable to detect text");
 }
 
-class SelectImageAreaTextDetectNotifier extends ChangeNotifier{
+class SelectImageAreaTextDetectNotifier extends ChangeNotifier {
   String fileName = '/TEMP_IMG.jpg';
   String tempPath = "";
   String selectedImagePath = "";
   final cropController = CropController();
-  var itemProcessIndex = 0;/// 0 for detect text once,1 for detect text more
+  var itemProcessIndex = 0;
+
+  /// 0 for detect text once,1 for detect text more
   // final TextRecognizer recognizer = GoogleVision.instance.textRecognizer();
 
   var isProcessing = false;
   var isImageLoading = true;
   var detectOneTime = false;
 
-  bool isDisposed = false;///To prevent Unhandled Exception: A ChangeNotifier was used after being disposed.
+  bool isDisposed = false;
+
+  ///To prevent Unhandled Exception: A ChangeNotifier was used after being disposed.
 
   List detectedValues = [];
 
@@ -47,22 +51,24 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier{
   OnDetectErrorCallBack? onDetectError;
 
   set setProcessing(bool value) {
-      isProcessing = value;
-      notifyListeners();
-  }
-  set setImageLoading(bool value) {
-      isImageLoading = value;
-      notifyListeners();
-  }
-  
-  Uint8List? croppedData;
-  
-  set setCroppedData(Uint8List? value) {
-      croppedData = value;
-      notifyListeners();
+    isProcessing = value;
+    notifyListeners();
   }
 
-  void initState(String imagePath,SelectAreaCallBack onSelectArea,OnDetectErrorCallBack onDetectError,bool isDetectOnce){
+  set setImageLoading(bool value) {
+    isImageLoading = value;
+    notifyListeners();
+  }
+
+  Uint8List? croppedData;
+
+  set setCroppedData(Uint8List? value) {
+    croppedData = value;
+    notifyListeners();
+  }
+
+  void initState(String imagePath, SelectAreaCallBack onSelectArea,
+      OnDetectErrorCallBack onDetectError, bool isDetectOnce) {
     this.onSelectArea = onSelectArea;
     this.onDetectError = onDetectError;
     selectedImagePath = imagePath;
@@ -70,7 +76,7 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier{
     initTempImage();
   }
 
-  void onCropped(BuildContext context,Uint8List cropped) async {
+  void onCropped(BuildContext context, Uint8List cropped) async {
     setCroppedData = cropped;
     await File(tempPath).writeAsBytes(croppedData!);
 
@@ -84,15 +90,16 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier{
     //   throw TextDetectException(e.toString());
     // }
     try {
-      var results = await TextRecognizer(script: TextRecognitionScript.latin).processImage(InputImage.fromFilePath(tempPath));
+      var results = await TextRecognizer(script: TextRecognitionScript.latin)
+          .processImage(InputImage.fromFilePath(tempPath));
       value = results.text.replaceAll("\n", " ");
-    } catch(e) {
+    } catch (e) {
       onDetectError?.call(e);
       // value = TextDetectException(e.toString());
       // throw TextDetectException(e.toString());
     }
     setProcessing = false;
-    if(detectOneTime && itemProcessIndex == 0){
+    if (detectOneTime && itemProcessIndex == 0) {
       onSelectArea?.call(detectOneTime ? value : detectedValues);
       Navigator.of(context).pop();
     } else {
@@ -107,23 +114,23 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier{
   }
 
   void onCropStatusChanged(CropStatus status) {
-    if(status == CropStatus.ready){
+    if (status == CropStatus.ready) {
       setImageLoading = false;
     }
   }
 
-  void initTempImage()async{
-    tempPath = await StorageHelper.getGalleryDirectory()+fileName;
-    StorageHelper.saveFileToDirectory(fileName,File(selectedImagePath));
+  void initTempImage() async {
+    tempPath = await StorageHelper.getGalleryDirectory() + fileName;
+    StorageHelper.saveFileToDirectory(fileName, File(selectedImagePath));
     notifyListeners();
   }
 
-  void onTapDone(BuildContext context){
+  void onTapDone(BuildContext context) {
     onSelectArea?.call(detectedValues);
     Navigator.of(context).pop();
   }
 
-  void cropImageFor(){
+  void cropImageFor() {
     cropController.crop();
     croppedData = null;
     setProcessing = true;
@@ -131,17 +138,17 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier{
 
   @override
   void notifyListeners() {
-    if(!isDisposed) {
+    if (!isDisposed) {
       super.notifyListeners();
     }
   }
+
   @override
   void dispose() {
-    if(tempPath.isNotEmpty) {
+    if (tempPath.isNotEmpty) {
       File(tempPath).deleteSync();
     }
     isDisposed = true;
     super.dispose();
   }
-
 }
