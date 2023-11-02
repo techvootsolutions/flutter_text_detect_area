@@ -69,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         onChanged: setDetectOnce)
                 ),
                 ListTile(
-                    title: const Text('Enable User Interactions Over Image'),
+                    title: Text("${enableImageInteractions?"Disable":"Enable"} User Interactions Over Image"),
                     leading: Switch(
                         value: enableImageInteractions,
                         onChanged: (v){
@@ -107,9 +107,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                   });
                                 }, onDetectError: (error) {
                                   print(error);
-                                  // print(error..contains("InputImage width and height should be at least 32!"));
-                                  if(error is PlatformException && (error.message?.contains("InputImage width and height should be at least 32!") ?? false)){
-                                    print("Selected area reached max height/width");
+                                  ///This error will occurred in Android only while user will try to crop image at max zoom level then ml kit will throw max 32 height/width exception
+                                  if(error is PlatformException && (error.message?.contains("InputImage width and height should be at least 32!") ?? false)) {
+                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Selected area should be able to crop image with at least 32 width and height.")));
                                   }
                             },)));
                       },
@@ -118,8 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     )),
                 const SizedBox(height: 20),
-                Text('${isDetectOnce ? "Single" : "Multiple"} Detected values :',
-                    style: Theme.of(context).textTheme.titleLarge),
+                Text('${isDetectOnce ? "Single" : "Multiple"} Detected values :', style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 20),
                 Flexible(
                     child: SingleChildScrollView(
