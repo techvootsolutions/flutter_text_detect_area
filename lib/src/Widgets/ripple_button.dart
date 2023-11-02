@@ -45,7 +45,7 @@ class RippleButton extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
               boxShadow: [
-                BoxShadow(color: shadowColor ?? Colors.black.withOpacity(0.25),blurRadius: shadowBlurRadius ?? 10, spreadRadius: shadowSpreadRadius ?? 0, offset: shadowOffset ?? Offset(0, 5))
+                BoxShadow(color: shadowColor ?? Colors.black.withOpacity(0.25),blurRadius: shadowBlurRadius ?? 10, spreadRadius: shadowSpreadRadius ?? 0, offset: shadowOffset ?? const Offset(0, 5))
               ],
               borderRadius: BorderRadius.circular(10),
               color: bgColor,

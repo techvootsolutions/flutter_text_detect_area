@@ -11,8 +11,8 @@ typedef SelectAreaCallBack = void Function(dynamic p1);
 typedef OnDetectErrorCallBack = void Function(dynamic error);
 
 class CustomException implements Exception {
-  final message;
-  final prefix;
+  final dynamic message;
+  final dynamic prefix;
 
   CustomException([this.message, this.prefix]);
 
@@ -75,7 +75,7 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier{
     await File(tempPath).writeAsBytes(croppedData!);
 
     // final GoogleVisionImage visionImage = GoogleVisionImage.fromFile(File(tempPath));
-    var value;
+    String value = "";
     // try {
     //   var results = await recognizer.processImage(visionImage);
     //   value = results.text!.replaceAll("\n", " ");

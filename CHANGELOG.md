@@ -2,7 +2,7 @@
 
 All notable changes to flutter_text_detect_area will be documented in this file
 
-## 1.0.0
+## 0.0.1
 
 ### What's Changed- 18-09-2023
 

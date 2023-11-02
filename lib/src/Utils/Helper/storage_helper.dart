@@ -1,15 +1,15 @@
 import 'dart:io';
-import 'dart:math' as Math;
+import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
-import 'package:image/image.dart' as Im;
+import 'package:image/image.dart' as im;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 class StorageHelper {
   /// /storage/emulated/0/Android/data/com.example.snapshop/files/MyGallery
   static Future<String> getGalleryDirectory() async {
-    final directory;
+    final Directory? directory;
     if (Platform.isAndroid) {
       directory = await getExternalStorageDirectory();
     } else {
@@ -36,21 +36,20 @@ class StorageHelper {
   static bool isImageFile(File file) => path.extension(file.path).endsWith(".jpg") || path.extension(file.path).endsWith(".jpeg") ? true : false;
 
   static Future<File?> compressImageAndVideo(File file) async {
-    if (file == null) {
-      return null;
-    }
+    // if (file == null) {
+    //   return null;
+    // }
     bool isImage = isImageFile(file);
     final bytes = file.readAsBytesSync().lengthInBytes;
     final kb = bytes / 1024;
     final mb = kb / 1024;
     if (isImage && mb > 1 || !isImage && mb > 2) {
-      print("File size is greater than ${isImage ? 1 : 2} mb ${isImage ? 'image' : 'video'} need to compressing");
       if (isImage) {
-        int rand = Math.Random().nextInt(10000);
-        Im.Image image = Im.decodeImage(file.readAsBytesSync())!;
-        Im.Image smallerImage = Im.copyResize(image, width: image.width, height: image.height); // choose the size here, it will maintain aspect ratio
+        int rand = math.Random().nextInt(10000);
+        im.Image image = im.decodeImage(file.readAsBytesSync())!;
+        im.Image smallerImage = im.copyResize(image, width: image.width, height: image.height); // choose the size here, it will maintain aspect ratio
         return File("${await getGalleryDirectory()}/img_$rand.jpg")
-          ..writeAsBytesSync(Im.encodeJpg(smallerImage, quality: 73));
+          ..writeAsBytesSync(im.encodeJpg(smallerImage, quality: 73));
       } else {
         /*await VideoCompress.setLogLevel(0);
         final MediaInfo? info = await VideoCompress.compressVideo(
@@ -65,8 +64,8 @@ class StorageHelper {
         }*/
       }
     } else {
-      print("No need Compression for ${isImage ? 'image' : 'video'}");
       return file;
     }
+    return null;
   }
 }
