@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/Users/kevinbaldha/Documents/flutter/3.10.1"
-export "FLUTTER_APPLICATION_PATH=/Users/kevinbaldha/Desktop/Techvoot/FlutterProjects/flutter_text_detect_by_area"
+export "FLUTTER_ROOT=/Users/kevinbaldha/Documents/flutter/flutter"
+export "FLUTTER_APPLICATION_PATH=/Users/kevinbaldha/Techvoot/Princy/Flutter/Package/flutter_text_detect_area"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=0.0.1"
