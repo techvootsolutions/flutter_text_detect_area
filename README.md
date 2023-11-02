@@ -4,20 +4,20 @@ The easy way to use this package for text recognition by selecting area over the
 ​
 Flutter Text Detect Area's text recognition can recognize/detect text from image's particular area by dragging/moving/panning area selector. They can also be used to recognise text once and more by passing value of detect once as true/false and also can set enable/disable image interactions by passing value of enableImageInteractions.
 ​
-<img src="https://github.com/techvootsolutions/flutter_text_detect_area/blob/tvPrincy/images/1.png" alt="universe" width="280">
-​
-## Getting Started
-​
-Add dependency to your flutter project:
-​
-```bash
-$ pub add flutter_text_detect_area
-```
-​
-## Usage
-​
+### Installing
+
+1.  Add dependency to `pubspec.yaml`
+
+    *Get the latest version in the 'Installing' tab on [pub.dev](https://pub.dev/packages/flutter_widget_catalogue)*
+
 ```dart
-import 'package:flutter_text_detect_area/flutter_text_detect_area.dart';
+  dependencies:
+      flutter_widget_catalogue: <latest-version>
+```
+
+2.  Import the package
+```dart
+import 'package:flutter_widget_catalogue/flutter_widget_catalogue.dart';
 ```
 ​
 ### Pick Image
@@ -67,12 +67,26 @@ Navigator.of(context).push(MaterialPageRoute(
 ​
 ### Output
 If you'll pass detect once as true then the result of `Single Text Detection` is single dynamic value. 
-​
+
+Screenshot
+-----------
 <img src="https://github.com/techvootsolutions/flutter_text_detect_area/blob/main/images/3.png" alt="universe" width="280">
 ​
 If you'll pass detect once as false then the result of `Multiple Text Detection Through Particular Image's Area` list of dynamic values.
+
+Screenshot
+-----------
 <img src="https://github.com/techvootsolutions/flutter_text_detect_area/blob/main/images/6.png" alt="universe" width="280">
 ​
 ## Example Project
 ​
 You can learn more from example project [here](https://github.com/techvootsolutions/flutter_text_detect_area/tree/main/example).
+
+### Changelog
+<p>Please see <a href="https://github.com/techvootsolutions/flutter_widget_catalogue/blob/main/CHANGELOG.md"><b>CHANGELOG </b></a>for more information what has changed recently.</p>
+
+### Main Contributors
+<ul>
+  <li><a href="https://github.com/tvPrincy"><b>Princy Varsani</b></a></li>
+  <li><a href="https://github.com/techkevin">Kevin Baldha</a></li>
+</ul>
