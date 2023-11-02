@@ -18,8 +18,7 @@ import 'package:flutter_text_detect_area/flutter_text_detect_area.dart';
 ```
 
 ## Screenshot
-
-<img src="https://github.com/techvootsolutions/flutter_text_detect_area/blob/main/images/1.png" width="280"> <img src="https://github.com/techvootsolutions/flutter_text_detect_area/blob/main/images/2.png" width="280">
+<img src="https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/1.png" width="280"> <img src="https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/2.png" width="280">
 
 ### Pick Image
 You can use <a src="https://pub.dev/packages/image_picker">`Image Picker`</a> for pick image from gallery/camera to pass the image for text `recognition/detection` by it's `particular areas`
@@ -70,12 +69,12 @@ If you'll pass detect once as true then the result of `Single Text Detection` is
 
 Screenshot
 -----------
-<img src="https://github.com/techvootsolutions/flutter_text_detect_area/blob/main/images/3.png" width="280">
+<img src="https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/3.png" width="280">
 If you'll pass detect once as false then the result of `Multiple Text Detection Through Particular Image's Area` list of dynamic values.
 
 Screenshot
 -----------
-<img src="https://github.com/techvootsolutions/flutter_text_detect_area/blob/main/images/6.png" width="280">
+<img src="https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/6.png" width="280">
 
 ## Example Project
 You can learn more from example project [here](https://github.com/techvootsolutions/flutter_text_detect_area/tree/main/example).
