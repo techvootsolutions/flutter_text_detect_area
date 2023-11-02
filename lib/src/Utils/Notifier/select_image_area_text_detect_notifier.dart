@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:crop_your_image/crop_your_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_text_detect_by_area/src/Utils/Helper/storage_helper.dart';
+import 'package:flutter_text_detect_area/src/Utils/Helper/storage_helper.dart';
 // import 'package:google_ml_vision/google_ml_vision.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 

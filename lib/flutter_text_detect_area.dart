@@ -1,4 +1,4 @@
-library flutter_text_detect_by_area;
+library flutter_text_detect_area;
 
 ///SelectImageAreaTextDetect
 export 'src/Screens/SelectImageAreaTextDetect/select_image_area_text_detect.dart';

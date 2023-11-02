@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_text_detect_by_area/flutter_text_detect_by_area.dart';
+import 'package:flutter_text_detect_area/flutter_text_detect_area.dart';
 import 'package:image_picker/image_picker.dart';
 
 void main() {

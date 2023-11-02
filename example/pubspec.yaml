@@ -30,7 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_text_detect_by_area:
+  flutter_text_detect_area:
     path: ../
 
   # The following adds the Cupertino Icons font to your application.

@@ -1,3 +1,11 @@
-## 0.0.1
+# Changelog
 
-* TODO: Describe initial release.
+All notable changes to flutter_text_detect_area will be documented in this file
+
+## 1.0.0
+
+### What's Changed- 18-09-2023
+
+- Describe initial release.
+- Sound Null Safety and compatible with dart 3
+
