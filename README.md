@@ -22,7 +22,7 @@ import 'package:flutter_text_detect_area/flutter_text_detect_area.dart';
 
 ## Screenshot
 
-<img src="https://github.com/techvootsolutions/flutter_text_detect_area/blob/main/images/1.png" alt="universe" width="280"> <img src="https://github.com/techvootsolutions/flutter_text_detect_area/blob/main/images/2.png" alt="universe" width="280">
+<img src="https://github.com/techvootsolutions/flutter_text_detect_area/blob/main/images/1.png" alt="universe" width="280"> <img src="https://github.com/techvootsolutions/flutter_text_detect_area/blob/main/images/2.png" alt="universe" width="280"> <img src="https://github.com/techvootsolutions/flutter_text_detect_area/blob/main/images/4.png" alt="universe" width="280">
 
 ### Pick Image
 You can use <a src="https://pub.dev/packages/image_picker">`Image Picker`</a> for pick image from gallery/camera to pass the image for text `recognition/detection` by it's `particular areas`
