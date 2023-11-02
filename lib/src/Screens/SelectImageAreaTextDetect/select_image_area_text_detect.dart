@@ -21,7 +21,6 @@ class SelectImageAreaTextDetect extends StatelessWidget{
   final OnDetectErrorCallBack onDetectError;
   @override
   Widget build(BuildContext context) {
-    print("Image path For detect texts:: $imagePath");
     if(imagePath.isEmpty){
       Navigator.of(context).pop();
       return Container();
@@ -44,11 +43,11 @@ class SelectImageAreaTextDetectProvider extends StatefulWidget {
   final bool enableImageInteractions;
 
   @override
-  _SelectImageAreaTextDetectProviderState createState() =>
-      _SelectImageAreaTextDetectProviderState();
+  SelectImageAreaTextDetectProviderState createState() =>
+      SelectImageAreaTextDetectProviderState();
 }
 
-class _SelectImageAreaTextDetectProviderState extends State<SelectImageAreaTextDetectProvider> {
+class SelectImageAreaTextDetectProviderState extends State<SelectImageAreaTextDetectProvider> {
   Uint8List? imageData;
   @override
   void initState() {
@@ -56,7 +55,7 @@ class _SelectImageAreaTextDetectProviderState extends State<SelectImageAreaTextD
     imageData = File(widget.imagePath).readAsBytesSync();
    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
      var state  = Provider.of<SelectImageAreaTextDetectNotifier>(context,listen: false);
-     state.initState(widget.imagePath,widget.onSelectArea,widget.onDetectError, widget.detectOnce ?? true);
+     state.initState(widget.imagePath,widget.onSelectArea,widget.onDetectError, widget.detectOnce);
    });
   }
 
