@@ -9,13 +9,16 @@ import 'package:flutter_text_detect_by_area/src/Widgets/ripple_button.dart';
 import 'package:provider/provider.dart';
 
 class SelectImageAreaTextDetect extends StatelessWidget{
-  const SelectImageAreaTextDetect({super.key,required this.imagePath,required this.onDetectText,this.detectOnce = true});
+  const SelectImageAreaTextDetect({super.key,required this.imagePath,required this.onDetectText,required this.onDetectError,this.detectOnce = true,this.enableImageInteractions = true});
       // : assert(imagePath != "", 'Require Image Path for detect text $imagePath');
   final String imagePath;
   ///Pass detectOnce as true if you want to detect multiple text on image
   ///after detection done press done for get detected text's as List ['text1','text2',.....'textN']
   final bool detectOnce;
-  final void Function(dynamic) onDetectText;
+  ///Pass enableImageInteractions as false if you don't want to enable users to interaction with selected image ex. zoom etc.
+  final bool enableImageInteractions;
+  final SelectAreaCallBack onDetectText;
+  final OnDetectErrorCallBack onDetectError;
   @override
   Widget build(BuildContext context) {
     print("Image path For detect texts:: $imagePath");
@@ -25,18 +28,20 @@ class SelectImageAreaTextDetect extends StatelessWidget{
     }
    return ChangeNotifierProvider(
        create: (_) => SelectImageAreaTextDetectNotifier(),
-      child: SelectImageAreaTextDetectProvider(imagePath: imagePath, onSelectArea: onDetectText,detectOnce: detectOnce,),
+      child: SelectImageAreaTextDetectProvider(imagePath: imagePath, onSelectArea: onDetectText,onDetectError: onDetectError,detectOnce: detectOnce,enableImageInteractions: enableImageInteractions),
    );
   }
 
 }
 
 class SelectImageAreaTextDetectProvider extends StatefulWidget {
-  const SelectImageAreaTextDetectProvider({super.key, required this.imagePath,required this.onSelectArea, this.detectOnce = true});
+  const SelectImageAreaTextDetectProvider({super.key, required this.imagePath,required this.onSelectArea,required this.onDetectError, this.detectOnce = true, this.enableImageInteractions = true});
       // : assert(imagePath != "", 'Require Image Path for detect text $imagePath');
   final String imagePath;
   final SelectAreaCallBack onSelectArea;
+  final OnDetectErrorCallBack onDetectError;
   final bool detectOnce;
+  final bool enableImageInteractions;
 
   @override
   _SelectImageAreaTextDetectProviderState createState() =>
@@ -51,7 +56,7 @@ class _SelectImageAreaTextDetectProviderState extends State<SelectImageAreaTextD
     imageData = File(widget.imagePath).readAsBytesSync();
    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
      var state  = Provider.of<SelectImageAreaTextDetectNotifier>(context,listen: false);
-     state.initState(widget.imagePath,widget.onSelectArea, widget.detectOnce ?? true);
+     state.initState(widget.imagePath,widget.onSelectArea,widget.onDetectError, widget.detectOnce ?? true);
    });
   }
 
@@ -137,11 +142,12 @@ class _SelectImageAreaTextDetectProviderState extends State<SelectImageAreaTextD
                           children: [
                             // state.isProcessing == false ?
                             Crop(
+                              interactive: widget.enableImageInteractions,
                               onStatusChanged: state.onCropStatusChanged,
                               baseColor: Colors.transparent,
                               maskColor: state.isImageLoading || state.isProcessing || state.itemProcessIndex == 1 ? Colors.transparent : null,
                               controller: state.cropController,
-                              initialSize: 0.25,
+                              initialArea: const Rect.fromLTWH(0, 0, 100, 50),
                               image:imageData ?? File(widget.imagePath).readAsBytesSync(),
                               cornerDotBuilder: (size, cornerIndex) {return DotControl(color: state.isImageLoading || state.isProcessing || state.itemProcessIndex == 1 ? Colors.transparent : Colors.black,);},
                               onCropped: (v){ state.onCropped(context,v); },
