@@ -77,9 +77,8 @@ If you'll pass detect once as false then the result of `Multiple Text Detection 
 Screenshot
 -----------
 <img src="https://github.com/techvootsolutions/flutter_text_detect_area/blob/main/images/6.png" alt="universe" width="280">
-​
+
 ## Example Project
-​
 You can learn more from example project [here](https://github.com/techvootsolutions/flutter_text_detect_area/tree/main/example).
 
 ### Changelog
@@ -87,7 +86,7 @@ You can learn more from example project [here](https://github.com/techvootsoluti
 
 ### Main Contributors
 <ul>
-  <li><a href="https://github.com/tvTushar"><b>Tushar Chovatiya</b></a></li>
-  <li><a href="https://github.com/tvPrincy"><b>Princy Varsani</b></a></li>
+  <li><a href="https://github.com/tvTushar">Tushar Chovatiya</a></li>
+  <li><a href="https://github.com/tvPrincy">Princy Varsani</a></li>
   <li><a href="https://github.com/techkevin">Kevin Baldha</a></li>
 </ul>
