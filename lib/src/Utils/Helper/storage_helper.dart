@@ -33,7 +33,11 @@ class StorageHelper {
     return File(filePath);
   }
 
-  static bool isImageFile(File file) => path.extension(file.path).endsWith(".jpg") || path.extension(file.path).endsWith(".jpeg") ? true : false;
+  static bool isImageFile(File file) =>
+      path.extension(file.path).endsWith(".jpg") ||
+              path.extension(file.path).endsWith(".jpeg")
+          ? true
+          : false;
 
   static Future<File?> compressImageAndVideo(File file) async {
     // if (file == null) {
@@ -47,7 +51,10 @@ class StorageHelper {
       if (isImage) {
         int rand = math.Random().nextInt(10000);
         im.Image image = im.decodeImage(file.readAsBytesSync())!;
-        im.Image smallerImage = im.copyResize(image, width: image.width, height: image.height); // choose the size here, it will maintain aspect ratio
+        im.Image smallerImage = im.copyResize(image,
+            width: image.width,
+            height: image
+                .height); // choose the size here, it will maintain aspect ratio
         return File("${await getGalleryDirectory()}/img_$rand.jpg")
           ..writeAsBytesSync(im.encodeJpg(smallerImage, quality: 73));
       } else {
