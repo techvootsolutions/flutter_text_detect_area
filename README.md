@@ -21,6 +21,10 @@ import 'package:flutter_text_detect_area/flutter_text_detect_area.dart';
 <img src="https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/1.png" width="280"> 
 <img src="https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/2.png" width="280">
 
+<video width="220" height="340" controls>
+  <source src="https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/Ios.mp4" type="video/mp4">
+</video>
+
 ### Pick Image
 You can use <a src="https://pub.dev/packages/image_picker">`Image Picker`</a> for pick image from gallery/camera to pass the image for text `recognition/detection` by it's `particular areas`
 
