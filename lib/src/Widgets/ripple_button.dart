@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 ///RippleButton
 class RippleButton extends StatelessWidget {
-  RippleButton(
+  const RippleButton(
       {super.key,
       this.height,
       this.margin,
