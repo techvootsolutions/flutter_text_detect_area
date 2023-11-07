@@ -20,3 +20,10 @@ All notable changes to flutter_text_detect_area will be documented in this file
 ### What's Changed- 02-11-2023
 
 - Update README.md and CHANGELOG.md file
+
+## 0.0.1+3
+
+### What's Changed- 07-11-2023
+
+- Update README.md and CHANGELOG.md file
+- Add demo gif
