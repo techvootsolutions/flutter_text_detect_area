@@ -1,3 +1,5 @@
+import 'package:example/camera/text_detector_painter.dart';
+import 'package:example/camera/text_detector_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_text_detect_area/flutter_text_detect_area.dart';
@@ -15,6 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        useMaterial3: false,
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Text Detect By Area'),
@@ -73,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     leading: Switch(
                         value: enableImageInteractions,
                         onChanged: (v) {
+                          // Navigator.of(context).push(MaterialPageRoute(builder: (context) => TextRecognizerView()));
                           setState(() {
                             enableImageInteractions = v;
                           });
