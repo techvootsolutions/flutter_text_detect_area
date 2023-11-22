@@ -70,6 +70,8 @@ If you'll pass detect once as true then the result of `Single Text Detection` is
 Screenshot
 -----------
 <img src="https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/3.png" width="280">
+
+### Output
 If you'll pass detect once as false then the result of `Multiple Text Detection Through Particular Image's Area` list of dynamic values.
 
 Screenshot
