@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        useMaterial3: false,
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Text Detect By Area'),
@@ -127,6 +128,23 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: const Center(
                           child: Text(
                         "Pick Image And Detect Text",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      )),
+                    )),
+                // const SizedBox(height: 20),
+                RippleButton(
+                    margin: const EdgeInsets.all(20),
+                    bgColor: Colors.lightBlue,
+                    child: InkWell(
+                      onTap: () async {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => LiveTextRecognizerView()));
+                      },
+                      child: const Center(
+                          child: Text(
+                        "Live Text Detect Camera",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,

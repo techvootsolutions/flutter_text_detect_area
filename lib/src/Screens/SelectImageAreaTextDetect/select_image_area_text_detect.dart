@@ -186,71 +186,66 @@ class SelectImageAreaTextDetectProviderState
         );
       }
 
-      return WillPopScope(
-          onWillPop: () async {
-            state.navigateBackScreen(context);
-            return false;
-          },
-          child: SafeArea(
-            top: false,
-            bottom: false,
-            child: Scaffold(
-              backgroundColor: Colors.black,
-              body: Column(
-                children: [
-                  Expanded(
-                      child: Stack(children: [
-                    // state.isProcessing == false ?
-                    Crop(
-                      interactive: widget.enableImageInteractions,
-                      onStatusChanged: state.onCropStatusChanged,
-                      baseColor: Colors.transparent,
-                      maskColor: state.isImageLoading ||
+      return SafeArea(
+        top: false,
+        bottom: false,
+        child: Scaffold(
+          backgroundColor: Colors.black,
+          body: Column(
+            children: [
+              Expanded(
+                  child: Stack(children: [
+                // state.isProcessing == false ?
+                Crop(
+                  interactive: widget.enableImageInteractions,
+                  onStatusChanged: state.onCropStatusChanged,
+                  baseColor: Colors.transparent,
+                  maskColor: state.isImageLoading ||
+                          state.isProcessing ||
+                          state.itemProcessIndex == 1
+                      ? Colors.transparent
+                      : null,
+                  controller: state.cropController,
+                  // initialArea: const Rect.fromLTWH(0, 0, 100, 50),
+                  initialSize: 0.215,
+                  image:
+                      imageData ?? File(widget.imagePath).readAsBytesSync(),
+                  cornerDotBuilder: (size, cornerIndex) {
+                    return DotControl(
+                      color: state.isImageLoading ||
                               state.isProcessing ||
                               state.itemProcessIndex == 1
                           ? Colors.transparent
-                          : null,
-                      controller: state.cropController,
-                      // initialArea: const Rect.fromLTWH(0, 0, 100, 50),
-                      initialSize: 0.215,
-                      image:
-                          imageData ?? File(widget.imagePath).readAsBytesSync(),
-                      cornerDotBuilder: (size, cornerIndex) {
-                        return DotControl(
-                          color: state.isImageLoading ||
-                                  state.isProcessing ||
-                                  state.itemProcessIndex == 1
-                              ? Colors.transparent
-                              : Colors.black,
-                        );
-                      },
-                      onCropped: (v) {
-                        state.onCropped(context, v);
-                      },
-                    ),
-                    state.isImageLoading
-                        ? const Center(
-                            child:
-                                CircularProgressIndicator(color: Colors.white))
-                        : Container(),
-                  ])),
-                  Container(
-                    height: size.height * 0.18,
-                    width: size.width,
-                    color: Colors.black,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Center(
-                          child: state.itemProcessIndex == 1 &&
-                                  widget.detectOnce == false
-                              ? buildHighLightMoreButtons(size)
-                              : buildInstruct(size)),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ));
+                          : Colors.black,
+                    );
+                  },
+                  onCropped: (v) {
+                    state.onCropped(context, v);
+                  },
+                ),
+                state.isImageLoading
+                    ? const Center(
+                        child:
+                            CircularProgressIndicator(color: Colors.white))
+                    : Container(),
+              ])),
+              Container(
+                height: size.height * 0.18,
+                width: size.width,
+                color: Colors.black,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Center(
+                      child: state.itemProcessIndex == 1 &&
+                              widget.detectOnce == false
+                          ? buildHighLightMoreButtons(size)
+                          : buildInstruct(size)),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
     });
   }
 }
