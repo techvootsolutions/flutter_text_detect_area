@@ -1,5 +1,3 @@
-import 'package:example/camera/text_detector_painter.dart';
-import 'package:example/camera/text_detector_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_text_detect_area/flutter_text_detect_area.dart';
@@ -76,7 +74,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     leading: Switch(
                         value: enableImageInteractions,
                         onChanged: (v) {
-                          // Navigator.of(context).push(MaterialPageRoute(builder: (context) => TextRecognizerView()));
                           setState(() {
                             enableImageInteractions = v;
                           });
@@ -131,6 +128,23 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: const Center(
                           child: Text(
                         "Pick Image And Detect Text",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      )),
+                    )),
+                // const SizedBox(height: 20),
+                RippleButton(
+                    margin: const EdgeInsets.all(20),
+                    bgColor: Colors.lightBlue,
+                    child: InkWell(
+                      onTap: () async {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => LiveTextRecognizerView()));
+                      },
+                      child: const Center(
+                          child: Text(
+                        "Live Text Detect Camera",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
