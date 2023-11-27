@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_text_detect_area/flutter_text_detect_area.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 class CameraView extends StatefulWidget {
@@ -10,10 +11,11 @@ class CameraView extends StatefulWidget {
       {Key? key,
         required this.customPaint,
         required this.onImage,
+        required this.detectedTexts,
         this.onCameraFeedReady,
         this.onDetectorViewModeChanged,
         this.onCameraLensDirectionChanged,
-        this.initialCameraLensDirection = CameraLensDirection.back})
+        this.initialCameraLensDirection = CameraLensDirection.back, })
       : super(key: key);
 
   final CustomPaint? customPaint;
@@ -22,7 +24,7 @@ class CameraView extends StatefulWidget {
   final VoidCallback? onDetectorViewModeChanged;
   final Function(CameraLensDirection direction)? onCameraLensDirectionChanged;
   final CameraLensDirection initialCameraLensDirection;
-
+  final List<DetectedTextInfo> detectedTexts;
   @override
   State<CameraView> createState() => _CameraViewState();
 }
@@ -87,13 +89,30 @@ class _CameraViewState extends State<CameraView> {
               child: Text('Changing camera lens'),
             )
                 : CameraPreview(
-              _controller!,
-              child: widget.customPaint,
-            ),
+                              _controller!,
+                              child: widget.customPaint,
+                            ),
           ),
+          SelectionArea(child: Stack(
+              children: widget.detectedTexts.map((detectedText) {
+                return Positioned(
+                  left: detectedText.position.dx,
+                  top: detectedText.position.dy,
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.5),
+                    ),
+                    child: Text(
+                      detectedText.text,
+                      style: const TextStyle(fontSize: 16, fontWeight:FontWeight.w700,color: Colors.black),
+                    ),
+                  ),
+                );
+              }).toList())),
+          // _zoomControl(),
           _backButton(),
           _switchLiveCameraToggle(),
-          _zoomControl(),
           // _exposureControl(),
         ],
       ),
@@ -143,46 +162,50 @@ class _CameraViewState extends State<CameraView> {
     bottom: 16,
     left: 0,
     right: 0,
-    child: Align(
-      alignment: Alignment.bottomCenter,
-      child: SizedBox(
-        width: 250,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Slider(
-                value: _currentZoomLevel,
-                min: _minAvailableZoom,
-                max: _maxAvailableZoom,
-                activeColor: Colors.white,
-                inactiveColor: Colors.white30,
-                onChanged: (value) async {
-                  setState(() {
-                    _currentZoomLevel = value;
-                  });
-                  await _controller?.setZoomLevel(value);
-                },
+    child: Container(
+      color: Colors.black,
+      width: double.infinity,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: SizedBox(
+          width: 250,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Slider(
+                  value: _currentZoomLevel,
+                  min: _minAvailableZoom,
+                  max: _maxAvailableZoom,
+                  activeColor: Colors.white,
+                  inactiveColor: Colors.white30,
+                  onChanged: (value) async {
+                    setState(() {
+                      _currentZoomLevel = value;
+                    });
+                    await _controller?.setZoomLevel(value);
+                  },
+                ),
               ),
-            ),
-            Container(
-              width: 50,
-              decoration: BoxDecoration(
-                color: Colors.black54,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Text(
-                    '${_currentZoomLevel.toStringAsFixed(1)}x',
-                    style: const TextStyle(color: Colors.white),
+              Container(
+                width: 50,
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text(
+                      '${_currentZoomLevel.toStringAsFixed(1)}x',
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     ),
