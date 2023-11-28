@@ -1,8 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_text_detect_area/src/Screens/camera/camera.dart';
 import 'package:flutter_text_detect_area/src/Screens/camera/coordinates_translator.dart';
-import 'package:flutter_text_detect_area/src/Screens/camera/text_detector_painter.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 enum LiveDetectorViewMode { liveFeed, gallery }
@@ -48,7 +48,7 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
   @override
   void initState() {
     _mode = widget.initialDetectionMode;
-    selectedTexts.clear();
+    // selectedTexts.clear();
     super.initState();
   }
 
@@ -61,43 +61,52 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(children: [
-        _mode == LiveDetectorViewMode.liveFeed
-            ? CameraView(
-                customPaint: _customPaint,
-                onImage: _processImage,
-                onDetectorViewModeChanged: _onDetectorViewModeChanged,
-                initialCameraLensDirection:
-                    widget.initialCameraLensDirection,
-                onCameraLensDirectionChanged:
-                    widget.onCameraLensDirectionChanged, detectedTexts: detectedTexts,
-              )
-            : const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Text("LIVE FEED MODE OFF!!")],
-              ),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (v) {
+        if (v) {
+          return;
+        }
+        Navigator.pop(context, detectedTexts);
+      },
+      child: Scaffold(
+        body: Stack(children: [
+          _mode == LiveDetectorViewMode.liveFeed
+              ? CameraView(
+                  customPaint: _customPaint,
+                  onImage: _processImage,
+                  onDetectorViewModeChanged: _onDetectorViewModeChanged,
+                  initialCameraLensDirection: widget.initialCameraLensDirection,
+                  onCameraLensDirectionChanged:
+                      widget.onCameraLensDirectionChanged,
+                  detectedTexts: detectedTexts,
+                )
+              : const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Text("LIVE FEED MODE OFF!!")],
+                ),
 
-        // Positioned(
-        //     top: 30,
-        //     left: 100,
-        //     right: 100,
-        //     child: Row(
-        //       children: [
-        //         Spacer(),
-        //         Container(
-        //             decoration: BoxDecoration(
-        //               color: Colors.black54,
-        //               borderRadius: BorderRadius.circular(10.0),
-        //             ),
-        //             child: Padding(
-        //               padding: const EdgeInsets.all(4.0),
-        //               child: _buildDropdown(),
-        //             )),
-        //         Spacer(),
-        //       ],
-        //     )),
-      ]),
+          // Positioned(
+          //     top: 30,
+          //     left: 100,
+          //     right: 100,
+          //     child: Row(
+          //       children: [
+          //         Spacer(),
+          //         Container(
+          //             decoration: BoxDecoration(
+          //               color: Colors.black54,
+          //               borderRadius: BorderRadius.circular(10.0),
+          //             ),
+          //             child: Padding(
+          //               padding: const EdgeInsets.all(4.0),
+          //               child: _buildDropdown(),
+          //             )),
+          //         Spacer(),
+          //       ],
+          //     )),
+        ]),
+      ),
     );
   }
 
@@ -144,7 +153,7 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
     if (!_canProcess) return;
     if (_isBusy) return;
     _isBusy = true;
-    _textRecognizer.processImage(inputImage).then((recognizedText){
+    _textRecognizer.processImage(inputImage).then((recognizedText) {
       // setState(() {
       //
       // });
