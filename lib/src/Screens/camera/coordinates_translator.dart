@@ -5,12 +5,12 @@ import 'package:camera/camera.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 double translateX(
-    double x,
-    Size canvasSize,
-    Size imageSize,
-    InputImageRotation rotation,
-    CameraLensDirection cameraLensDirection,
-    ) {
+  double x,
+  Size canvasSize,
+  Size imageSize,
+  InputImageRotation rotation,
+  CameraLensDirection cameraLensDirection,
+) {
   switch (rotation) {
     case InputImageRotation.rotation90deg:
       return x *
@@ -33,12 +33,12 @@ double translateX(
 }
 
 double translateY(
-    double y,
-    Size canvasSize,
-    Size imageSize,
-    InputImageRotation rotation,
-    CameraLensDirection cameraLensDirection,
-    ) {
+  double y,
+  Size canvasSize,
+  Size imageSize,
+  InputImageRotation rotation,
+  CameraLensDirection cameraLensDirection,
+) {
   switch (rotation) {
     case InputImageRotation.rotation90deg:
     case InputImageRotation.rotation270deg:

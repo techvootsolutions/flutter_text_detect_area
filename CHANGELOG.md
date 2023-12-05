@@ -27,3 +27,10 @@ All notable changes to flutter_text_detect_area will be documented in this file
 
 - Update README.md and CHANGELOG.md file
 - Add demo gif
+
+## 0.0.1+4
+
+### What's Changed- 05-12-2023
+
+- Update README.md and CHANGELOG.md file
+- Add live camera to detect text and upload gif

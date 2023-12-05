@@ -151,7 +151,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                 builder: (context) =>
                                     LiveTextRecognizerView()));
 
-
                         // cameraDetectedValue = (await Clipboard.getData(Clipboard.kTextPlain))
                         //             ?.text ??
                         //         '';
@@ -160,11 +159,11 @@ class _MyHomePageState extends State<MyHomePage> {
                             int counter = 0;
                             values.forEach((element) {
                               cameraDetectedValue +=
-                              "$counter. \t\t ${(element as DetectedTextInfo).text} \n\n";
+                                  "$counter. \t\t ${(element as DetectedTextInfo).text} \n\n";
                               counter++;
                             });
                           }
-                        print("cameraDetectedValue $cameraDetectedValue");
+                          print("cameraDetectedValue $cameraDetectedValue");
                         });
                       },
                       child: const Center(

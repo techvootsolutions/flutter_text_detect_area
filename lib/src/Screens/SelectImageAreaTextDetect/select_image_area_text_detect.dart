@@ -208,8 +208,7 @@ class SelectImageAreaTextDetectProviderState
                   controller: state.cropController,
                   // initialArea: const Rect.fromLTWH(0, 0, 100, 50),
                   initialSize: 0.215,
-                  image:
-                      imageData ?? File(widget.imagePath).readAsBytesSync(),
+                  image: imageData ?? File(widget.imagePath).readAsBytesSync(),
                   cornerDotBuilder: (size, cornerIndex) {
                     return DotControl(
                       color: state.isImageLoading ||
@@ -225,8 +224,7 @@ class SelectImageAreaTextDetectProviderState
                 ),
                 state.isImageLoading
                     ? const Center(
-                        child:
-                            CircularProgressIndicator(color: Colors.white))
+                        child: CircularProgressIndicator(color: Colors.white))
                     : Container(),
               ])),
               Container(

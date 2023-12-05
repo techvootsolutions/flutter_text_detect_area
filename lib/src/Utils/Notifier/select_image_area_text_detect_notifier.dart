@@ -101,6 +101,7 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier {
     setProcessing = false;
     if (detectOneTime && itemProcessIndex == 0) {
       onSelectArea?.call(detectOneTime ? value : detectedValues);
+      if (!context.mounted) return;
       Navigator.of(context).pop();
     } else {
       itemProcessIndex = 1;
