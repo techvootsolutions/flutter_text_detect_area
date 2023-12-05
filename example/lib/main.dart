@@ -9,12 +9,14 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        useMaterial3: false,
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Text Detect By Area'),
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
+
   final String title;
 
   @override
@@ -32,6 +35,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String detectedValue = "";
+  String cameraDetectedValue = "";
   bool isDetectOnce = true;
   bool enableImageInteractions = true;
 
@@ -83,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: InkWell(
                       onTap: () async {
                         setState(() {
-                          detectedValue = "";
+                          detectedValue = cameraDetectedValue = "";
                         });
                         final pickedFile = await ImagePicker()
                             .pickImage(source: ImageSource.gallery);
@@ -133,17 +137,58 @@ class _MyHomePageState extends State<MyHomePage> {
                             fontWeight: FontWeight.bold),
                       )),
                     )),
+                // const SizedBox(height: 20),
+                RippleButton(
+                    margin: const EdgeInsets.all(20),
+                    bgColor: Colors.lightBlue,
+                    child: InkWell(
+                      onTap: () async {
+                        setState(() {
+                          detectedValue = cameraDetectedValue = "";
+                        });
+                        var values = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    LiveTextRecognizerView()));
+
+
+                        // cameraDetectedValue = (await Clipboard.getData(Clipboard.kTextPlain))
+                        //             ?.text ??
+                        //         '';
+                        setState(() {
+                          if (values is List) {
+                            int counter = 0;
+                            values.forEach((element) {
+                              cameraDetectedValue +=
+                              "$counter. \t\t ${(element as DetectedTextInfo).text} \n\n";
+                              counter++;
+                            });
+                          }
+                        print("cameraDetectedValue $cameraDetectedValue");
+                        });
+                      },
+                      child: const Center(
+                          child: Text(
+                        "Live Text Detect Camera",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      )),
+                    )),
                 const SizedBox(height: 20),
                 Text(
-                    '${isDetectOnce ? "Single" : "Multiple"} Detected values :',
+                    '${isDetectOnce || cameraDetectedValue.isEmpty ? "Single" : "Multiple"} Detected values :',
                     style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 20),
                 Flexible(
                     child: SingleChildScrollView(
                         child: Text(
-                            detectedValue.isEmpty
-                                ? "Please pick Image and Detect Text From Particular Image Area."
-                                : detectedValue,
+                            detectedValue.isEmpty && cameraDetectedValue.isEmpty
+                                ? "Please pick Image and Detect Text From Particular Image Area Or Detect From Live Camera And Select/Copy over detected texts"
+                                : cameraDetectedValue.isNotEmpty
+                                    ? cameraDetectedValue
+                                    : detectedValue,
                             style: Theme.of(context).textTheme.bodyMedium)))
               ],
             ),
