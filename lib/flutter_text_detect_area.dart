@@ -5,3 +5,6 @@ export 'src/Screens/SelectImageAreaTextDetect/select_image_area_text_detect.dart
 
 ///CustomRippleButton
 export 'src/Widgets/ripple_button.dart';
+
+///LiveTextRecognizerView
+export 'src/Screens/camera/live_text_recognizer_view.dart';
