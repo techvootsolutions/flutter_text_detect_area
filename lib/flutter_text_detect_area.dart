@@ -1,3 +1,15 @@
+/*
+* Flutter Text Detect Area
+*
+* The easy way to use this package for text recognition by selecting area over the images and live camera in Flutter.
+* Flutter Text Detect Area's text recognition can recognize/detect text from image's particular area by dragging/moving/panning area selector.
+* They can also be used to recognise text once and more by passing value of detect once as true/false
+* and also can set enable/disable image interactions by passing value of enableImageInteractions.
+* Developed by Techvoot Solutions
+*
+*/
+
+///FlutterTextDetectArea
 library flutter_text_detect_area;
 
 ///SelectImageAreaTextDetect

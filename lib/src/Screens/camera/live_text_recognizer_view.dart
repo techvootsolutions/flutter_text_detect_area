@@ -6,7 +6,13 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 
 enum LiveDetectorViewMode { liveFeed, gallery }
 
+///This class will collect the recognised text and it's position in the text blocks
 class DetectedTextInfo {
+  ///Detected Text will store into text variable and x,y position will be in position as offset with x,y
+  ///ex. detect text is 'Hello' and its position is x = 1.0 ,y = 2.0
+  ///then this class with values will looks like
+  ///DetectedTextInfo(text : 'Hello', position : Offset(1.0,2.0)
+
   final String text;
   final Offset position;
 
