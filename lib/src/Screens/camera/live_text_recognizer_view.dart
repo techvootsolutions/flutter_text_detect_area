@@ -1,6 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_text_detect_area/src/Screens/camera/camera.dart';
 import 'package:flutter_text_detect_area/src/Screens/camera/coordinates_translator.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
@@ -18,7 +17,7 @@ class DetectedTextInfo {
 }
 
 class LiveTextRecognizerView extends StatefulWidget {
-  LiveTextRecognizerView({
+  const LiveTextRecognizerView({
     super.key,
     this.initialDetectionMode = LiveDetectorViewMode.liveFeed,
     this.initialCameraLensDirection = CameraLensDirection.back,
@@ -122,7 +121,7 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
     setState(() {});
   }
 
-  Widget _buildDropdown() => DropdownButton<TextRecognitionScript>(
+  Widget buildDropdown() => DropdownButton<TextRecognitionScript>(
         value: _script,
         icon: const Icon(Icons.arrow_downward),
         elevation: 16,
@@ -194,20 +193,20 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
           inputImage.metadata!.rotation,
           _cameraLensDirection,
         );
-        final right = translateX(
-          textBlock.boundingBox.right,
-          size,
-          inputImage.metadata!.size,
-          inputImage.metadata!.rotation,
-          _cameraLensDirection,
-        );
-        final bottom = translateY(
-          textBlock.boundingBox.bottom,
-          size,
-          inputImage.metadata!.size,
-          inputImage.metadata!.rotation,
-          _cameraLensDirection,
-        );
+        // final right = translateX(
+        //   textBlock.boundingBox.right,
+        //   size,
+        //   inputImage.metadata!.size,
+        //   inputImage.metadata!.rotation,
+        //   _cameraLensDirection,
+        // );
+        // final bottom = translateY(
+        //   textBlock.boundingBox.bottom,
+        //   size,
+        //   inputImage.metadata!.size,
+        //   inputImage.metadata!.rotation,
+        //   _cameraLensDirection,
+        // );
         final Offset position = Offset(
           left, // Calculate X position
           top, // Calculate Y position

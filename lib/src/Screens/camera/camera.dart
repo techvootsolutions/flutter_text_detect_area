@@ -41,7 +41,6 @@ class _CameraViewState extends State<CameraView> {
   double _maxAvailableExposureOffset = 0.0;
   double _currentExposureOffset = 0.0;
   bool _changingCameraLens = false;
-  bool _changingSelection = false;
 
   @override
   void initState() {
@@ -148,7 +147,7 @@ class _CameraViewState extends State<CameraView> {
         ),
       );
 
-  Widget _doneButton() => Positioned(
+  Widget doneButton() => Positioned(
         top: 85,
         right: 8,
         child: SizedBox(
@@ -190,7 +189,7 @@ class _CameraViewState extends State<CameraView> {
         ),
       );
 
-  Widget _zoomControl() => Positioned(
+  Widget zoomControl() => Positioned(
         bottom: 16,
         left: 0,
         right: 0,
@@ -243,7 +242,7 @@ class _CameraViewState extends State<CameraView> {
         ),
       );
 
-  Widget _exposureControl() => Positioned(
+  Widget exposureControl() => Positioned(
         top: 40,
         right: 8,
         child: ConstrainedBox(
