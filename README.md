@@ -1,5 +1,5 @@
 # Flutter Text Detect Area
-The easy way to use this package for text recognition by selecting area over the images in Flutter. Flutter Text Detect Area's text recognition can recognize/detect text from image's particular area by dragging/moving/panning area selector. They can also be used to recognise text once and more by passing value of detect once as true/false and also can set enable/disable image interactions by passing value of enableImageInteractions.
+The easy way to use this package for text recognition by selecting area over the images and live camera in Flutter. Flutter Text Detect Area's text recognition can recognize/detect text from image's particular area by dragging/moving/panning area selector. They can also be used to recognise text once and more by passing value of detect once as true/false and also can set enable/disable image interactions by passing value of enableImageInteractions.
 
 ### Installing
 
@@ -18,7 +18,7 @@ import 'package:flutter_text_detect_area/flutter_text_detect_area.dart';
 ```
 
 ## Screenshot
-<img src="https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/android.gif" width="280">
+<img src="https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/android.gif" width="280"> <img src="https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/camera.gif" width="280">
 
 ### Pick Image
 You can use <a src="https://pub.dev/packages/image_picker">`Image Picker`</a> for pick image from gallery/camera to pass the image for text `recognition/detection` by it's `particular areas`
