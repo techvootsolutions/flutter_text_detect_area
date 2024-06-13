@@ -7,7 +7,7 @@ import 'package:flutter_text_detect_area/flutter_text_detect_area.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 class CameraView extends StatefulWidget {
-  CameraView({
+  const CameraView({
     Key? key,
     required this.customPaint,
     required this.onImage,
@@ -154,8 +154,8 @@ class _CameraViewState extends State<CameraView> {
           width: 60.0,
           child: TextButton(
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                (Set<MaterialState> states) {
+              backgroundColor: WidgetStateProperty.resolveWith<Color?>(
+                (Set<WidgetState> states) {
                   return Colors.black54; // Use the component's default.
                 },
               ),
