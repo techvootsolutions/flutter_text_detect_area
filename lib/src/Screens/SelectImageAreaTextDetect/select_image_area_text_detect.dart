@@ -5,12 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_text_detect_area/src/Element/padding_class.dart';
 import 'package:flutter_text_detect_area/src/Style/text_style.dart';
 import 'package:flutter_text_detect_area/src/Utils/Notifier/select_image_area_text_detect_notifier.dart';
+import 'package:flutter_text_detect_area/src/Widgets/custom_script_dropdown.dart';
 import 'package:flutter_text_detect_area/src/Widgets/ripple_button.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:provider/provider.dart';
 
 class SelectImageAreaTextDetect extends StatelessWidget {
   const SelectImageAreaTextDetect(
       {super.key,
+      this.showLangScriptDropDown = false,
+      this.initialRecognitionScript,
       required this.imagePath,
       required this.onDetectText,
       required this.onDetectError,
@@ -18,7 +22,8 @@ class SelectImageAreaTextDetect extends StatelessWidget {
       this.enableImageInteractions = true});
   // : assert(imagePath != "", 'Require Image Path for detect text $imagePath');
   final String imagePath;
-
+  final TextRecognitionScript? initialRecognitionScript;
+  final bool showLangScriptDropDown;
   ///Pass detectOnce as true if you want to detect multiple text on image
   ///after detection done press done for get detected text's as List ['text1','text2',.....'textN']
   final bool detectOnce;
@@ -37,6 +42,7 @@ class SelectImageAreaTextDetect extends StatelessWidget {
       create: (_) => SelectImageAreaTextDetectNotifier(),
       child: SelectImageAreaTextDetectProvider(
           imagePath: imagePath,
+          showLangScriptDropDown: showLangScriptDropDown,
           onSelectArea: onDetectText,
           onDetectError: onDetectError,
           detectOnce: detectOnce,
@@ -48,6 +54,8 @@ class SelectImageAreaTextDetect extends StatelessWidget {
 class SelectImageAreaTextDetectProvider extends StatefulWidget {
   const SelectImageAreaTextDetectProvider(
       {super.key,
+      this.showLangScriptDropDown = false,
+      this.initialRecognitionScript,
       required this.imagePath,
       required this.onSelectArea,
       required this.onDetectError,
@@ -57,6 +65,8 @@ class SelectImageAreaTextDetectProvider extends StatefulWidget {
   final String imagePath;
   final SelectAreaCallBack onSelectArea;
   final OnDetectErrorCallBack onDetectError;
+  final TextRecognitionScript? initialRecognitionScript;
+  final bool showLangScriptDropDown;
   final bool detectOnce;
   final bool enableImageInteractions;
 
@@ -75,6 +85,7 @@ class SelectImageAreaTextDetectProviderState
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var state = Provider.of<SelectImageAreaTextDetectNotifier>(context,
           listen: false);
+      state.script = widget.initialRecognitionScript ?? TextRecognitionScript.latin;
       state.initState(widget.imagePath, widget.onSelectArea,
           widget.onDetectError, widget.detectOnce);
     });
@@ -92,6 +103,7 @@ class SelectImageAreaTextDetectProviderState
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            paddingTop(5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -193,6 +205,17 @@ class SelectImageAreaTextDetectProviderState
           backgroundColor: Colors.black,
           body: Column(
             children: [
+              widget.showLangScriptDropDown ? CustomScriptDropdown(
+              selectedScript: state.script,
+                onChanged:  (TextRecognitionScript? script) {
+                  if (script != null) {
+                    setState(() {
+                      state.script = script;
+                      state.textRecognizer.close();
+                      state.textRecognizer = TextRecognizer(script: state.script);
+                    });
+                  }
+                },) :Container(),
               Expanded(
                   child: Stack(children: [
                 // state.isProcessing == false ?

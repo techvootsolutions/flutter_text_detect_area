@@ -38,13 +38,14 @@ class _MyHomePageState extends State<MyHomePage> {
   String cameraDetectedValue = "";
   bool isDetectOnce = true;
   bool enableImageInteractions = true;
+  TextRecognitionScript initialRecognitionScript = TextRecognitionScript.latin;
 
   @override
   Widget build(BuildContext context) {
-    void setDetectOnce(_isDetectOnce) {
+    void setDetectOnce(isDetectOnce) {
       setState(() {
         detectedValue = "";
-        isDetectOnce = _isDetectOnce;
+        isDetectOnce = isDetectOnce;
       });
     }
 
@@ -93,6 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             .pickImage(source: ImageSource.gallery);
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => SelectImageAreaTextDetect(
+                                  showLangScriptDropDown: true,
                                   detectOnce: isDetectOnce,
                                   enableImageInteractions:
                                       enableImageInteractions,
@@ -104,11 +106,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                       }
                                       if (v is List) {
                                         int counter = 0;
-                                        v.forEach((element) {
+                                        for (var element in v) {
                                           detectedValue +=
                                               "$counter. \t\t $element \n\n";
                                           counter++;
-                                        });
+                                        }
                                       }
                                     });
                                   },
@@ -149,7 +151,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         var values = await Navigator.of(context).push(
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    LiveTextRecognizerView()));
+                                     Stack(
+                                      children: [
+                                        LiveTextRecognizerView(initialRecognitionScript: initialRecognitionScript,showLangScriptDropDown:true),
+                                      ],
+                                    )));
 
                         // cameraDetectedValue = (await Clipboard.getData(Clipboard.kTextPlain))
                         //             ?.text ??
@@ -157,11 +163,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         setState(() {
                           if (values is List) {
                             int counter = 0;
-                            values.forEach((element) {
+                            for (var element in values) {
                               cameraDetectedValue +=
                                   "$counter. \t\t ${(element as DetectedTextInfo).text} \n\n";
                               counter++;
-                            });
+                            }
                           }
                           print("cameraDetectedValue $cameraDetectedValue");
                         });
@@ -193,5 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ));
+
+
   }
 }

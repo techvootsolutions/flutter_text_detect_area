@@ -20,3 +20,5 @@ export 'src/Widgets/ripple_button.dart';
 
 ///LiveTextRecognizerView
 export 'src/Screens/camera/live_text_recognizer_view.dart';
+
+export 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';

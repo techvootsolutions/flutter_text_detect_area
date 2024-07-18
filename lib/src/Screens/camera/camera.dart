@@ -4,11 +4,10 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_text_detect_area/flutter_text_detect_area.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 class CameraView extends StatefulWidget {
   const CameraView({
-    Key? key,
+    super.key,
     required this.customPaint,
     required this.onImage,
     required this.detectedTexts,
@@ -16,7 +15,7 @@ class CameraView extends StatefulWidget {
     this.onDetectorViewModeChanged,
     this.onCameraLensDirectionChanged,
     this.initialCameraLensDirection = CameraLensDirection.back,
-  }) : super(key: key);
+  });
 
   final CustomPaint? customPaint;
   final Function(InputImage inputImage) onImage;
@@ -359,62 +358,137 @@ class _CameraViewState extends State<CameraView> {
     DeviceOrientation.portraitDown: 180,
     DeviceOrientation.landscapeRight: 270,
   };
-
   InputImage? _inputImageFromCameraImage(CameraImage image) {
-    if (_controller == null) return null;
+    var camera = _cameras[_cameraIndex];
 
-    // get image rotation
-    // it is used in android to convert the InputImage from Dart to Java: https://github.com/flutter-ml/google_ml_kit_flutter/blob/master/packages/google_mlkit_commons/android/src/main/java/com/google_mlkit_commons/InputImageConverter.java
-    // `rotation` is not used in iOS to convert the InputImage from Dart to Obj-C: https://github.com/flutter-ml/google_ml_kit_flutter/blob/master/packages/google_mlkit_commons/ios/Classes/MLKVisionImage%2BFlutterPlugin.m
-    // in both platforms `rotation` and `camera.lensDirection` can be used to compensate `x` and `y` coordinates on a canvas: https://github.com/flutter-ml/google_ml_kit_flutter/blob/master/packages/example/lib/vision_detector_views/painters/coordinates_translator.dart
-    final camera = _cameras[_cameraIndex];
+    // Determine sensor orientation
     final sensorOrientation = camera.sensorOrientation;
-    // print(
-    //     'lensDirection: ${camera.lensDirection}, sensorOrientation: $sensorOrientation, ${_controller?.value.deviceOrientation} ${_controller?.value.lockedCaptureOrientation} ${_controller?.value.isCaptureOrientationLocked}');
+
+    // Determine rotation compensation based on platform
     InputImageRotation? rotation;
     if (Platform.isIOS) {
-      rotation = InputImageRotationValue.fromRawValue(sensorOrientation);
+      rotation = InputImageRotation.rotation0deg; // iOS handles rotation differently
     } else if (Platform.isAndroid) {
-      var rotationCompensation =
-          _orientations[_controller!.value.deviceOrientation];
+      var rotationCompensation = _orientations[_controller!.value.deviceOrientation];
       if (rotationCompensation == null) return null;
+
       if (camera.lensDirection == CameraLensDirection.front) {
-        // front-facing
-        rotationCompensation = (sensorOrientation + rotationCompensation) % 360;
+        // Front-facing camera
+        rotationCompensation = (rotationCompensation + sensorOrientation) % 360;
       } else {
-        // back-facing
-        rotationCompensation =
-            (sensorOrientation - rotationCompensation + 360) % 360;
+        // Back-facing camera
+        rotationCompensation = (sensorOrientation - rotationCompensation + 360) % 360;
       }
-      rotation = InputImageRotationValue.fromRawValue(rotationCompensation);
-      // print('rotationCompensation: $rotationCompensation');
+
+      // Convert rotation compensation to InputImageRotation
+      rotation = InputImageRotation.rotation0deg;
+      switch (rotationCompensation) {
+        case 0:
+          rotation = InputImageRotation.rotation0deg;
+          break;
+        case 90:
+          rotation = InputImageRotation.rotation90deg;
+          break;
+        case 180:
+          rotation = InputImageRotation.rotation180deg;
+          break;
+        case 270:
+          rotation = InputImageRotation.rotation270deg;
+          break;
+      }
     }
+
     if (rotation == null) return null;
-    // print('final rotation: $rotation');
 
-    // get image format
-    final format = InputImageFormatValue.fromRawValue(image.format.raw);
-    // validate format depending on platform
-    // only supported formats:
-    // * nv21 for Android
-    // * bgra8888 for iOS
-    if (format == null ||
-        (Platform.isAndroid && format != InputImageFormat.nv21) ||
-        (Platform.isIOS && format != InputImageFormat.bgra8888)) return null;
+    // Determine image format based on platform
+    InputImageFormat format;
+    if (Platform.isAndroid) {
+      format = InputImageFormat.nv21; // Android format
+    } else if (Platform.isIOS) {
+      format = InputImageFormat.yuv420; // iOS format
+    } else {
+      return null; // Unsupported platform
+    }
 
-    // since format is constraint to nv21 or bgra8888, both only have one plane
-    if (image.planes.length != 1) return null;
-    final plane = image.planes.first;
+    // Validate image format and planes
+    if (image.format.group != ImageFormatGroup.yuv420) return null;
+    if (image.planes.length != 3) return null; // Ensure correct number of planes
 
-    // compose InputImage using bytes
+    // Convert planes to bytes
+    final bytes = Uint8List(image.planes[0].bytes.length +
+        image.planes[1].bytes.length +
+        image.planes[2].bytes.length);
+    int offset = 0;
+    for (int i = 0; i < image.planes.length; i++) {
+      bytes.setRange(offset, offset + image.planes[i].bytes.length, image.planes[i].bytes);
+      offset += image.planes[i].bytes.length;
+    }
+
+    // Create InputImage using bytes and metadata
     return InputImage.fromBytes(
-      bytes: plane.bytes,
+      bytes: bytes,
       metadata: InputImageMetadata(
         size: Size(image.width.toDouble(), image.height.toDouble()),
-        rotation: rotation, // used only in Android
-        format: format, // used only in iOS
-        bytesPerRow: plane.bytesPerRow, // used only in iOS
+        rotation: rotation,
+        format: format, bytesPerRow: image.planes[0].bytesPerRow,
       ),
     );
   }
+  // InputImage? _inputImageFromCameraImage(CameraImage image) {
+  //   if (_controller == null) return null;
+  //
+  //   // get image rotation
+  //   // it is used in android to convert the InputImage from Dart to Java: https://github.com/flutter-ml/google_ml_kit_flutter/blob/master/packages/google_mlkit_commons/android/src/main/java/com/google_mlkit_commons/InputImageConverter.java
+  //   // `rotation` is not used in iOS to convert the InputImage from Dart to Obj-C: https://github.com/flutter-ml/google_ml_kit_flutter/blob/master/packages/google_mlkit_commons/ios/Classes/MLKVisionImage%2BFlutterPlugin.m
+  //   // in both platforms `rotation` and `camera.lensDirection` can be used to compensate `x` and `y` coordinates on a canvas: https://github.com/flutter-ml/google_ml_kit_flutter/blob/master/packages/example/lib/vision_detector_views/painters/coordinates_translator.dart
+  //   final camera = _cameras[_cameraIndex];
+  //   final sensorOrientation = camera.sensorOrientation;
+  //   // print(
+  //   //     'lensDirection: ${camera.lensDirection}, sensorOrientation: $sensorOrientation, ${_controller?.value.deviceOrientation} ${_controller?.value.lockedCaptureOrientation} ${_controller?.value.isCaptureOrientationLocked}');
+  //   InputImageRotation? rotation;
+  //   if (Platform.isIOS) {
+  //     rotation = InputImageRotationValue.fromRawValue(sensorOrientation);
+  //   } else if (Platform.isAndroid) {
+  //     var rotationCompensation =
+  //         _orientations[_controller!.value.deviceOrientation];
+  //     if (rotationCompensation == null) return null;
+  //     if (camera.lensDirection == CameraLensDirection.front) {
+  //       // front-facing
+  //       rotationCompensation = (sensorOrientation + rotationCompensation) % 360;
+  //     } else {
+  //       // back-facing
+  //       rotationCompensation =
+  //           (sensorOrientation - rotationCompensation + 360) % 360;
+  //     }
+  //     rotation = InputImageRotationValue.fromRawValue(rotationCompensation);
+  //     // print('rotationCompensation: $rotationCompensation');
+  //   }
+  //   if (rotation == null) return null;
+  //   // print('final rotation: $rotation');
+  //
+  //   // get image format
+  //   final format = InputImageFormatValue.fromRawValue(image.format.raw);
+  //   // validate format depending on platform
+  //   // only supported formats:
+  //   // * nv21 for Android
+  //   // * bgra8888 for iOS
+  //   if (format == null ||
+  //       (Platform.isAndroid && format != InputImageFormat.nv21) ||
+  //       (Platform.isIOS && format != InputImageFormat.bgra8888)) return null;
+  //
+  //   // since format is constraint to nv21 or bgra8888, both only have one plane
+  //   if (image.planes.length != 1) return null;
+  //   final plane = image.planes.first;
+  //
+  //   // compose InputImage using bytes
+  //   return InputImage.fromBytes(
+  //     bytes: plane.bytes,
+  //     metadata: InputImageMetadata(
+  //       size: Size(image.width.toDouble(), image.height.toDouble()),
+  //       rotation: rotation, // used only in Android
+  //       format: format, // used only in iOS
+  //       bytesPerRow: plane.bytesPerRow, // used only in iOS
+  //     ),
+  //   );
+  // }
 }
