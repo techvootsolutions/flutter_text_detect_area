@@ -33,6 +33,8 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier {
   String selectedImagePath = "";
   final cropController = CropController();
   var itemProcessIndex = 0;
+  var script = TextRecognitionScript.latin;
+  var textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
 
   /// 0 for detect text once,1 for detect text more
   // final TextRecognizer recognizer = GoogleVision.instance.textRecognizer();
@@ -90,8 +92,8 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier {
     //   throw TextDetectException(e.toString());
     // }
     try {
-      var results = await TextRecognizer(script: TextRecognitionScript.latin)
-          .processImage(InputImage.fromFilePath(tempPath));
+      var results =
+          await textRecognizer.processImage(InputImage.fromFilePath(tempPath));
       value = results.text.replaceAll("\n", " ");
     } catch (e) {
       onDetectError?.call(e);
