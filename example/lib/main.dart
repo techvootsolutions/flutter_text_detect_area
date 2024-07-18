@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String cameraDetectedValue = "";
   bool isDetectOnce = true;
   bool enableImageInteractions = true;
-  TextRecognitionScript initialRecognitionScript = TextRecognitionScript.chinese;
+  TextRecognitionScript initialRecognitionScript = TextRecognitionScript.latin;
 
   @override
   Widget build(BuildContext context) {
