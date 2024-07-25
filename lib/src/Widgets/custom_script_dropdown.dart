@@ -22,8 +22,8 @@ class _CustomScriptDropdownState extends State<CustomScriptDropdown> {
       child: DropdownButtonFormField<TextRecognitionScript>(
         value: widget.selectedScript,
         // icon: Icon(Icons.arrow_downward),
-        iconEnabledColor: Colors.blue,
-        iconDisabledColor: Colors.blue,
+        iconEnabledColor: Colors.black,
+        iconDisabledColor: Colors.black,
         iconSize: 24,
         elevation: 16,
         decoration: InputDecoration(
@@ -34,17 +34,17 @@ class _CustomScriptDropdownState extends State<CustomScriptDropdown> {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Colors.blue),
+            borderSide: const BorderSide(color: Colors.black),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Colors.blue),
+            borderSide: const BorderSide(color: Colors.black),
           ),
           contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
           // labelText: 'Select Your Script',
-          // labelStyle: TextStyle(color: Colors.blue),
+          // labelStyle: TextStyle(color: Colors.black),
         ),
-        style: const TextStyle(color: Colors.blue),
+        style: const TextStyle(color: Colors.black),
         onChanged: widget.onChanged ??
             (TextRecognitionScript? newValue) {
               setState(() {
