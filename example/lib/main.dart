@@ -13,13 +13,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Text Detect Area',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: false,
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Text Detect By Area'),
+      home: const MyHomePage(title: 'Flutter Text Detect Area'),
     );
   }
 }
