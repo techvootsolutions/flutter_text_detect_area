@@ -92,6 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         });
                         final pickedFile = await ImagePicker()
                             .pickImage(source: ImageSource.gallery);
+                        if (!context.mounted) return;
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => SelectImageAreaTextDetect(
                                   showLangScriptDropDown: true,
@@ -115,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     });
                                   },
                                   onDetectError: (error) {
-                                    print(error);
+                                    // print(error);
 
                                     ///This error will occurred in Android only while user will try to crop image at max zoom level then ml kit will throw max 32 height/width exception
                                     if (error is PlatformException &&
@@ -169,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               counter++;
                             }
                           }
-                          print("cameraDetectedValue $cameraDetectedValue");
+                          // print("cameraDetectedValue $cameraDetectedValue");
                         });
                       },
                       child: const Center(

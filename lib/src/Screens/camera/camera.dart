@@ -106,7 +106,7 @@ class _CameraViewState extends State<CameraView> {
                   child: Container(
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withAlpha((0.5 * 255).toInt()),
                     ),
                     child: Text(
                       detectedText.text,

@@ -5,22 +5,22 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:image/image.dart' as IMG;
+import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 
 class CropImage {
   static Future cropArea(String srcFilePath, String destFilePath, bool flip,
       int left, int top, int w, int h) async {
     var bytes = await File(srcFilePath).readAsBytes();
-    IMG.Image src = IMG.decodeImage(bytes)!;
+    img.Image src = img.decodeImage(bytes)!;
     int offsetX = left * 2;
     int offsetY = top * 2;
-    IMG.Image destImage = IMG.copyCrop(src,
+    img.Image destImage = img.copyCrop(src,
         x: offsetX, y: offsetY, width: w - left, height: h - top);
     if (flip) {
-      destImage = IMG.flipVertical(destImage);
+      destImage = img.flipVertical(destImage);
     }
-    var jpg = IMG.encodeJpg(destImage);
+    var jpg = img.encodeJpg(destImage);
     await File(destFilePath).writeAsBytes(jpg);
   }
 

@@ -1,12 +1,14 @@
 buildscript {
-    ext.kotlin_version = '1.7.10'
+    ext.kotlin_version = '1.9.10' // Updated Kotlin version
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal() // Ensures compatibility with newer Gradle plugins
+        maven { url "https://www.jitpack.io" }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.0'
+        classpath 'com.android.tools.build:gradle:8.2.2' // Updated Gradle version
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -15,15 +17,14 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
+        maven { url "https://www.jitpack.io" }
     }
 }
 
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
-    project.evaluationDependsOn(':app')
 }
 
 tasks.register("clean", Delete) {

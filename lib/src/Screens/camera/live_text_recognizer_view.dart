@@ -66,9 +66,7 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _mode = widget.initialDetectionMode;
-      print("HEHEHEH:: ${widget.initialRecognitionScript?.name}");
       _script = widget.initialRecognitionScript ?? TextRecognitionScript.latin;
-      print("HEHEHEH:: ${_script?.name}");
       _textRecognizer = TextRecognizer(script: _script ?? TextRecognitionScript.latin);
       setState(() {});
     });
@@ -87,7 +85,7 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (v) {
+      onPopInvokedWithResult: (v,value) {
         if (v) {
           return;
         }
@@ -141,10 +139,11 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
     setState(() {});
   }
 
-  Future<void> _processImage(InputImage inputImage) async {
+  void _processImage(InputImage inputImage)  {
     if (!_canProcess) return;
     if (_isBusy) return;
     _isBusy = true;
+    Size size = MediaQuery.of(context).size;
     try {
       _textRecognizer?.processImage(inputImage).then((recognizedText) {
         // setState(() {
@@ -172,7 +171,6 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
         for (final textBlock in recognizedText.blocks) {
           // Calculate positions based on your logic
           // Example: Use translateX and translateY functions as per your requirements
-          Size size = MediaQuery.of(context).size;
           final left = translateX(
             textBlock.boundingBox.left,
             size,
@@ -215,7 +213,7 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
         }
       });
     } catch (e) {
-      print(e);
+      // print(e);
     }
   }
 }
