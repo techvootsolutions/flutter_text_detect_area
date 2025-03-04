@@ -230,7 +230,7 @@ class SelectImageAreaTextDetectProviderState
                       : null,
                   controller: state.cropController,
                   // initialArea: const Rect.fromLTWH(0, 0, 100, 50),
-                  initialSize: 0.215,
+                  // initialSize: 0.215,
                   image: imageData ?? File(widget.imagePath).readAsBytesSync(),
                   cornerDotBuilder: (size, cornerIndex) {
                     return DotControl(
@@ -241,8 +241,10 @@ class SelectImageAreaTextDetectProviderState
                           : Colors.black,
                     );
                   },
-                  onCropped: (v) {
-                    state.onCropped(context, v);
+                  onCropped: (CropResult result) {
+                    if(result is CropSuccess){
+                      state.onCropped(context, result.croppedImage);
+                    }
                   },
                 ),
                 state.isImageLoading
