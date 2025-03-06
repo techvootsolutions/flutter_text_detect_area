@@ -415,8 +415,9 @@ class _CameraViewState extends State<CameraView> {
 
     // Validate image format and planes
     if (image.format.group != ImageFormatGroup.yuv420) return null;
-    if (image.planes.length != 3)
+    if (image.planes.length != 3) {
       return null; // Ensure correct number of planes
+    }
 
     // Convert planes to bytes
     final bytes = Uint8List(image.planes[0].bytes.length +
