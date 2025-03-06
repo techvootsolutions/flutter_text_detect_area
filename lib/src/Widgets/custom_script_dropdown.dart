@@ -2,25 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_text_detect_area/flutter_text_detect_area.dart';
 
 class CustomScriptDropdown extends StatefulWidget {
-  CustomScriptDropdown({super.key, this.onChanged, this.selectedScript});
+  const CustomScriptDropdown({super.key, this.onChanged, this.selectedScript});
 
-  TextRecognitionScript? selectedScript;
-  Function(TextRecognitionScript?)? onChanged;
+  final TextRecognitionScript? selectedScript;
+  final Function(TextRecognitionScript?)? onChanged;
 
   @override
-  _CustomScriptDropdownState createState() => _CustomScriptDropdownState();
+  CustomScriptDropdownState createState() => CustomScriptDropdownState();
 }
 
-class _CustomScriptDropdownState extends State<CustomScriptDropdown> {
+class CustomScriptDropdownState extends State<CustomScriptDropdown> {
+  TextRecognitionScript? selectedScript;
+  @override
+  void initState() {
+    selectedScript = widget.selectedScript;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Container(
       height: 150,
       width: 600,
-      padding: EdgeInsets.only(top: 40,left: size.width * 0.3, right: size.width * 0.3),
+      padding: EdgeInsets.only(
+          top: 40, left: size.width * 0.3, right: size.width * 0.3),
       child: DropdownButtonFormField<TextRecognitionScript>(
-        value: widget.selectedScript,
+        value: selectedScript,
         // icon: Icon(Icons.arrow_downward),
         iconEnabledColor: Colors.black,
         iconDisabledColor: Colors.black,
@@ -40,7 +48,8 @@ class _CustomScriptDropdownState extends State<CustomScriptDropdown> {
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(color: Colors.black),
           ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
           // labelText: 'Select Your Script',
           // labelStyle: TextStyle(color: Colors.black),
         ),
@@ -48,7 +57,7 @@ class _CustomScriptDropdownState extends State<CustomScriptDropdown> {
         onChanged: widget.onChanged ??
             (TextRecognitionScript? newValue) {
               setState(() {
-                widget.selectedScript = newValue;
+                selectedScript = newValue;
                 // Additional actions when the value changes
               });
             },
