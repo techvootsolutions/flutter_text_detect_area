@@ -18,13 +18,15 @@ class CustomScriptDropdownState extends State<CustomScriptDropdown> {
     selectedScript = widget.selectedScript;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Container(
       height: 150,
       width: 600,
-      padding: EdgeInsets.only(top: 40,left: size.width * 0.3, right: size.width * 0.3),
+      padding: EdgeInsets.only(
+          top: 40, left: size.width * 0.3, right: size.width * 0.3),
       child: DropdownButtonFormField<TextRecognitionScript>(
         value: selectedScript,
         // icon: Icon(Icons.arrow_downward),
@@ -46,7 +48,8 @@ class CustomScriptDropdownState extends State<CustomScriptDropdown> {
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(color: Colors.black),
           ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
           // labelText: 'Select Your Script',
           // labelStyle: TextStyle(color: Colors.black),
         ),

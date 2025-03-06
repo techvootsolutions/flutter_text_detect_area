@@ -367,9 +367,11 @@ class _CameraViewState extends State<CameraView> {
     // Determine rotation compensation based on platform
     InputImageRotation? rotation;
     if (Platform.isIOS) {
-      rotation = InputImageRotation.rotation0deg; // iOS handles rotation differently
+      rotation =
+          InputImageRotation.rotation0deg; // iOS handles rotation differently
     } else if (Platform.isAndroid) {
-      var rotationCompensation = _orientations[_controller!.value.deviceOrientation];
+      var rotationCompensation =
+          _orientations[_controller!.value.deviceOrientation];
       if (rotationCompensation == null) return null;
 
       if (camera.lensDirection == CameraLensDirection.front) {
@@ -377,7 +379,8 @@ class _CameraViewState extends State<CameraView> {
         rotationCompensation = (rotationCompensation + sensorOrientation) % 360;
       } else {
         // Back-facing camera
-        rotationCompensation = (sensorOrientation - rotationCompensation + 360) % 360;
+        rotationCompensation =
+            (sensorOrientation - rotationCompensation + 360) % 360;
       }
 
       // Convert rotation compensation to InputImageRotation
@@ -412,7 +415,8 @@ class _CameraViewState extends State<CameraView> {
 
     // Validate image format and planes
     if (image.format.group != ImageFormatGroup.yuv420) return null;
-    if (image.planes.length != 3) return null; // Ensure correct number of planes
+    if (image.planes.length != 3)
+      return null; // Ensure correct number of planes
 
     // Convert planes to bytes
     final bytes = Uint8List(image.planes[0].bytes.length +
@@ -420,7 +424,8 @@ class _CameraViewState extends State<CameraView> {
         image.planes[2].bytes.length);
     int offset = 0;
     for (int i = 0; i < image.planes.length; i++) {
-      bytes.setRange(offset, offset + image.planes[i].bytes.length, image.planes[i].bytes);
+      bytes.setRange(
+          offset, offset + image.planes[i].bytes.length, image.planes[i].bytes);
       offset += image.planes[i].bytes.length;
     }
 
@@ -430,7 +435,8 @@ class _CameraViewState extends State<CameraView> {
       metadata: InputImageMetadata(
         size: Size(image.width.toDouble(), image.height.toDouble()),
         rotation: rotation,
-        format: format, bytesPerRow: image.planes[0].bytesPerRow,
+        format: format,
+        bytesPerRow: image.planes[0].bytesPerRow,
       ),
     );
   }

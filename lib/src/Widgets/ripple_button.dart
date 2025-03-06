@@ -58,8 +58,12 @@ class RippleButton extends StatelessWidget {
             )),
         child: Material(
             color: Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
             child: InkWell(
               onTap: isDisable == true ? null : onTap,
+              radius: 10,
+              customBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
               borderRadius: BorderRadius.circular(10),
               child: child,
             )),

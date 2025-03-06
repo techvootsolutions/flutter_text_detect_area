@@ -55,7 +55,8 @@ class LiveTextRecognizerView extends StatefulWidget {
 class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
   LiveDetectorViewMode? _mode = LiveDetectorViewMode.liveFeed;
   TextRecognitionScript? _script = TextRecognitionScript.latin;
-  TextRecognizer? _textRecognizer = TextRecognizer(script:TextRecognitionScript.latin);
+  TextRecognizer? _textRecognizer =
+      TextRecognizer(script: TextRecognitionScript.latin);
   bool _canProcess = true;
   bool _isBusy = false;
   CustomPaint? _customPaint;
@@ -67,7 +68,8 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _mode = widget.initialDetectionMode;
       _script = widget.initialRecognitionScript ?? TextRecognitionScript.latin;
-      _textRecognizer = TextRecognizer(script: _script ?? TextRecognitionScript.latin);
+      _textRecognizer =
+          TextRecognizer(script: _script ?? TextRecognitionScript.latin);
       setState(() {});
     });
     // selectedTexts.clear();
@@ -85,7 +87,7 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (v,value) {
+      onPopInvokedWithResult: (v, value) {
         if (v) {
           return;
         }
@@ -115,7 +117,8 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
                       setState(() {
                         _script = script;
                         _textRecognizer?.close();
-                        _textRecognizer = TextRecognizer(script: _script ?? TextRecognitionScript.latin);
+                        _textRecognizer = TextRecognizer(
+                            script: _script ?? TextRecognitionScript.latin);
                         detectedTexts.clear();
                         _isBusy = false;
                       });
@@ -139,7 +142,7 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
     setState(() {});
   }
 
-  void _processImage(InputImage inputImage)  {
+  void _processImage(InputImage inputImage) {
     if (!_canProcess) return;
     if (_isBusy) return;
     _isBusy = true;
