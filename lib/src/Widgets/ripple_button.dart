@@ -45,7 +45,7 @@ class RippleButton extends StatelessWidget {
         decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                  color: shadowColor ?? Colors.black.withOpacity(0.25),
+                  color: shadowColor ?? Colors.black.withValues(alpha: 0.25),
                   blurRadius: shadowBlurRadius ?? 10,
                   spreadRadius: shadowSpreadRadius ?? 0,
                   offset: shadowOffset ?? const Offset(0, 5))
@@ -58,8 +58,12 @@ class RippleButton extends StatelessWidget {
             )),
         child: Material(
             color: Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
             child: InkWell(
               onTap: isDisable == true ? null : onTap,
+              radius: 10,
+              customBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
               borderRadius: BorderRadius.circular(10),
               child: child,
             )),

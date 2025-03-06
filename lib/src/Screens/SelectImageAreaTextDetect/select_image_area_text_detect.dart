@@ -24,6 +24,7 @@ class SelectImageAreaTextDetect extends StatelessWidget {
   final String imagePath;
   final TextRecognitionScript? initialRecognitionScript;
   final bool showLangScriptDropDown;
+
   ///Pass detectOnce as true if you want to detect multiple text on image
   ///after detection done press done for get detected text's as List ['text1','text2',.....'textN']
   final bool detectOnce;
@@ -85,7 +86,8 @@ class SelectImageAreaTextDetectProviderState
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var state = Provider.of<SelectImageAreaTextDetectNotifier>(context,
           listen: false);
-      state.script = widget.initialRecognitionScript ?? TextRecognitionScript.latin;
+      state.script =
+          widget.initialRecognitionScript ?? TextRecognitionScript.latin;
       state.initState(widget.imagePath, widget.onSelectArea,
           widget.onDetectError, widget.detectOnce);
     });
@@ -205,17 +207,21 @@ class SelectImageAreaTextDetectProviderState
           backgroundColor: Colors.black,
           body: Column(
             children: [
-              widget.showLangScriptDropDown ? CustomScriptDropdown(
-              selectedScript: state.script,
-                onChanged:  (TextRecognitionScript? script) {
-                  if (script != null) {
-                    setState(() {
-                      state.script = script;
-                      state.textRecognizer.close();
-                      state.textRecognizer = TextRecognizer(script: state.script);
-                    });
-                  }
-                },) :Container(),
+              widget.showLangScriptDropDown
+                  ? CustomScriptDropdown(
+                      selectedScript: state.script,
+                      onChanged: (TextRecognitionScript? script) {
+                        if (script != null) {
+                          setState(() {
+                            state.script = script;
+                            state.textRecognizer.close();
+                            state.textRecognizer =
+                                TextRecognizer(script: state.script);
+                          });
+                        }
+                      },
+                    )
+                  : Container(),
               Expanded(
                   child: Stack(children: [
                 // state.isProcessing == false ?
@@ -230,7 +236,7 @@ class SelectImageAreaTextDetectProviderState
                       : null,
                   controller: state.cropController,
                   // initialArea: const Rect.fromLTWH(0, 0, 100, 50),
-                  initialSize: 0.215,
+                  // initialSize: 0.215,
                   image: imageData ?? File(widget.imagePath).readAsBytesSync(),
                   cornerDotBuilder: (size, cornerIndex) {
                     return DotControl(
@@ -241,8 +247,10 @@ class SelectImageAreaTextDetectProviderState
                           : Colors.black,
                     );
                   },
-                  onCropped: (v) {
-                    state.onCropped(context, v);
+                  onCropped: (CropResult result) {
+                    if (result is CropSuccess) {
+                      state.onCropped(context, result.croppedImage);
+                    }
                   },
                 ),
                 state.isImageLoading
