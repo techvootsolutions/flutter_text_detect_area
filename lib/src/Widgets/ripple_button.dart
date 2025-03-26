@@ -69,25 +69,5 @@ class RippleButton extends StatelessWidget {
             )),
       ),
     );
-    // return Container(
-    //   height: 50,
-    //   width: buttonWidth,
-    //   padding: EdgeInsets.only(left: 10, right: 10, top: top),
-    //   child: Material(
-    //     borderRadius: BorderRadius.circular(10),
-    //     color: Colors.transparent,
-    //     child: Container(
-    //         height: 50,
-    //         width: buttonWidth,
-    //         decoration: BoxDecoration(
-    //             borderRadius: BorderRadius.circular(10),
-    //             color: bgColor,
-    //             border: Border.all(
-    //               color: borderColor,
-    //               width: width,
-    //             )),
-    //         child: Center(child: child,)),
-    //   ),
-    // );
   }
 }
