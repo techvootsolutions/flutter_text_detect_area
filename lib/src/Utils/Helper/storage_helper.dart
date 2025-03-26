@@ -57,8 +57,7 @@ class StorageHelper {
                 .height); // choose the size here, it will maintain aspect ratio
         return File("${await getGalleryDirectory()}/img_$rand.jpg")
           ..writeAsBytesSync(im.encodeJpg(smallerImage, quality: 73));
-      } else {
-      }
+      } else {}
     } else {
       return file;
     }

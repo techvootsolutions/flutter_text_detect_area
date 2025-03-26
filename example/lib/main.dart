@@ -90,7 +90,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("Detection Mode",
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(color: Colors.white)),
                       const SizedBox(height: 10),
                       ToggleButtons(
                         borderRadius: BorderRadius.circular(10),
@@ -246,7 +249,10 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 20),
               Text(
                   '${isDetectOnce || cameraDetectedValue.isEmpty ? "Single" : "Multiple"} Detected values :',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: Colors.white)),
               const SizedBox(height: 20),
               Flexible(
                 child: Card(
@@ -264,7 +270,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                 : cameraDetectedValue.isNotEmpty
                                     ? cameraDetectedValue
                                     : detectedValue,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white))),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(color: Colors.white))),
                   ),
                 ),
               )
