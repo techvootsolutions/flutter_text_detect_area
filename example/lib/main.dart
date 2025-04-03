@@ -61,14 +61,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 const SizedBox(height: 30),
                 const Text(
                   "Flutter Text Detect Area",
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
                 const SizedBox(height: 20),
                 _buildCard(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Detection Mode", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white)),
+                      const Text("Detection Mode",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white)),
                       const SizedBox(height: 10),
                       ToggleButtons(
                         borderRadius: BorderRadius.circular(10),
@@ -98,14 +105,20 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       const SizedBox(height: 20),
                       ListTile(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
                         dense: true,
                         onTap: () {
                           setState(() {
                             enableImageInteractions = !enableImageInteractions;
                           });
                         },
-                        title: Text("${enableImageInteractions ? "Disable" : "Enable"} User Interactions Over Image",style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey)),
+                        title: Text(
+                            "${enableImageInteractions ? "Disable" : "Enable"} User Interactions Over Image",
+                            style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey)),
                         trailing: Switch(
                           activeTrackColor: Colors.blueAccent,
                           value: enableImageInteractions,
@@ -124,7 +137,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {
                     detectedValue = cameraDetectedValue = "";
                   });
-                  final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+                  final pickedFile = await ImagePicker()
+                      .pickImage(source: ImageSource.gallery);
                   if (!context.mounted) return;
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => SelectImageAreaTextDetect(
@@ -134,24 +148,27 @@ class _MyHomePageState extends State<MyHomePage> {
                       imagePath: pickedFile?.path ?? '',
                       onDetectText: (v) {
                         setState(() {
-                                            if (v is String) {
-                                              detectedValue = v;
-                                            }
-                                            if (v is List) {
-                                              int counter = 0;
-                                              for (var element in v) {
-                                                detectedValue +=
-                                                    "$counter. \t\t $element \n\n";
-                                                counter++;
-                                              }
-                                            }
+                          if (v is String) {
+                            detectedValue = v;
+                          }
+                          if (v is List) {
+                            int counter = 0;
+                            for (var element in v) {
+                              detectedValue += "$counter. \t\t $element \n\n";
+                              counter++;
+                            }
+                          }
                         });
                       },
                       onDetectError: (error) {
                         if (error is PlatformException &&
-                            (error.message?.contains("InputImage width and height should be at least 32!") ?? false)) {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text("Selected area should be at least 32x32 pixels."),
+                            (error.message?.contains(
+                                    "InputImage width and height should be at least 32!") ??
+                                false)) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text(
+                                "Selected area should be at least 32x32 pixels."),
                           ));
                         }
                       },
@@ -163,27 +180,31 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {
                     detectedValue = cameraDetectedValue = "";
                   });
-                  var values = await Navigator.of(context).push(MaterialPageRoute(
+                  var values =
+                      await Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => Stack(
                       children: [
-                        LiveTextRecognizerView(initialRecognitionScript: initialRecognitionScript, showLangScriptDropDown: true),
+                        LiveTextRecognizerView(
+                            initialRecognitionScript: initialRecognitionScript,
+                            showLangScriptDropDown: true),
                       ],
                     ),
                   ));
                   setState(() {
-                                if (values is List) {
-                                  int counter = 0;
-                                  for (var element in values) {
-                                    cameraDetectedValue +=
-                                        "$counter. \t\t ${(element as DetectedTextInfo).text} \n\n";
-                                    counter++;
-                                  }
-                                }
-                                // print("cameraDetectedValue $cameraDetectedValue");
+                    if (values is List) {
+                      int counter = 0;
+                      for (var element in values) {
+                        cameraDetectedValue +=
+                            "$counter. \t\t ${(element as DetectedTextInfo).text} \n\n";
+                        counter++;
+                      }
+                    }
+                    // print("cameraDetectedValue $cameraDetectedValue");
                   });
                 }),
                 const SizedBox(height: 20),
-                Text('${cameraDetectedValue.isNotEmpty || !isDetectOnce ? "Multiple" : "Single"} Detected Text :',
+                Text(
+                    '${cameraDetectedValue.isNotEmpty || !isDetectOnce ? "Multiple" : "Single"} Detected Text :',
                     style: Theme.of(context)
                         .textTheme
                         .titleMedium
@@ -202,8 +223,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         padding: const EdgeInsets.all(16.0),
                         child: SingleChildScrollView(
                           child: Text(
-                            detectedValue.isNotEmpty || cameraDetectedValue.isNotEmpty
-                                ? (cameraDetectedValue.isNotEmpty ? cameraDetectedValue : detectedValue)
+                            detectedValue.isNotEmpty ||
+                                    cameraDetectedValue.isNotEmpty
+                                ? (cameraDetectedValue.isNotEmpty
+                                    ? cameraDetectedValue
+                                    : detectedValue)
                                 : "Please pick an image and detect text or use Live Camera",
                             style: Theme.of(context)
                                 .textTheme
@@ -238,13 +262,15 @@ class _MyHomePageState extends State<MyHomePage> {
       child: FilledButton(
         style: FilledButton.styleFrom(
           backgroundColor: Colors.blueAccent,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           padding: const EdgeInsets.symmetric(vertical: 16),
         ),
         onPressed: onTap,
         child: Text(
           text,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+          style: const TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
     );
