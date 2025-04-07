@@ -76,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                               color: Colors.white)),
+                      
                       const SizedBox(height: 10),
                       ToggleButtons(
                         borderRadius: BorderRadius.circular(10),
@@ -237,6 +238,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                     ),
+              ),
+              
                   ),
                 ),
               ],
