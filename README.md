@@ -82,7 +82,7 @@ Screenshot
 You can learn more from example project [here](https://github.com/techvootsolutions/flutter_text_detect_area/tree/main/example).
 
 ### Changelog
-<p>Please see <a href="https://github.com/techvootsolutions/flutter_text_detect_area/blob/tvPrincy/CHANGELOG.md"><b>CHANGELOG </b></a>for more information what has changed recently.</p>
+<p>Please see <a href="https://pub.dev/packages/flutter_text_detect_area/changelog"><b>CHANGELOG </b></a>for more information what has changed recently.</p>
 
 ### Main Contributors
 <ul>

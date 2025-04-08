@@ -2,6 +2,13 @@
 
 All notable changes to flutter_text_detect_area will be documented in this file
 
+## 0.0.4
+
+* Update flutter latest dependency
+* Change CHANGELOG.md file
+* Update README.md file
+* Update UI
+
 ## 0.0.3+1
 
 * Remove unnecessary code and container decorations for pixelation shader.
@@ -35,7 +42,7 @@ All notable changes to flutter_text_detect_area will be documented in this file
 ## 0.0.1+1
 
 * Update README.md and CHANGELOG.md file
-* 
+
 ## 0.0.1
 
 * Describe initial release.
