@@ -148,9 +148,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       imagePath: pickedFile?.path ?? '',
                       onDetectText: (v) {
                         setState(() {
+                          ///For single detection
                           if (v is String) {
                             detectedValue = v;
                           }
+
+                          ///For multiple area's detections
                           if (v is List) {
                             int counter = 0;
                             for (var element in v) {
@@ -199,7 +202,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         counter++;
                       }
                     }
-                    // print("cameraDetectedValue $cameraDetectedValue");
                   });
                 }),
                 const SizedBox(height: 20),
@@ -216,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     elevation: 5,
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withValues(alpha: 0.1),
                     child: SizedBox(
                       width: double.infinity,
                       child: Padding(
@@ -251,7 +253,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 4,
-      color: Colors.white.withOpacity(0.1),
+      color: Colors.white.withValues(alpha: 0.1),
       child: Padding(padding: const EdgeInsets.all(16), child: child),
     );
   }
