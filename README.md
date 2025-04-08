@@ -49,10 +49,10 @@ Navigator.of(context).push(MaterialPageRoute(
                                     ///For multiple area's detections
                                     if (v is List) {
                                       int counter = 0;
-                                      v.forEach((element) {
+                                      for (var element in v) {
                                         detectedValue += "$counter. \t\t $element \n\n";
                                         counter++;
-                                      });
+                                      }
                                     }
                                   });
                                 }, onDetectError: (error) {
