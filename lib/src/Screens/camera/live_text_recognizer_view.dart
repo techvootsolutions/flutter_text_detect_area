@@ -34,13 +34,6 @@ class LiveTextRecognizerView extends StatefulWidget {
     this.onCameraLensDirectionChanged,
   });
 
-  // : assert(
-  //     dropDownLangScriptWidget == null || initialRecognitionScript != null,
-  //     'If dropDownLangScriptWidget is provided, recognitionScript must also be provided.',
-  //     // Additional assertion message for clarity
-  //     // You can customize the error message as per your requirement
-  //   );
-
   final LiveDetectorViewMode initialDetectionMode;
   final TextRecognitionScript? initialRecognitionScript;
   final bool showLangScriptDropDown;
@@ -149,22 +142,6 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
     Size size = MediaQuery.of(context).size;
     try {
       _textRecognizer?.processImage(inputImage).then((recognizedText) {
-        // setState(() {
-        //
-        // });
-        // if (inputImage.metadata?.size != null &&
-        //     inputImage.metadata?.rotation != null) {
-        //   final painter = TextRecognizerPainter(
-        //       tapPosition,
-        //       recognizedText,
-        //       inputImage.metadata!.size,
-        //       inputImage.metadata!.rotation,
-        //       _cameraLensDirection);
-        //   _customPaint = CustomPaint(painter: painter);
-        // } else {
-        //   // TODO: set _customPaint to draw boundingRect on top of image
-        //   _customPaint = null;
-        // }
         _isBusy = false;
 
         // Clear previous detected texts
@@ -188,20 +165,6 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
             inputImage.metadata!.rotation,
             _cameraLensDirection,
           );
-          // final right = translateX(
-          //   textBlock.boundingBox.right,
-          //   size,
-          //   inputImage.metadata!.size,
-          //   inputImage.metadata!.rotation,
-          //   _cameraLensDirection,
-          // );
-          // final bottom = translateY(
-          //   textBlock.boundingBox.bottom,
-          //   size,
-          //   inputImage.metadata!.size,
-          //   inputImage.metadata!.rotation,
-          //   _cameraLensDirection,
-          // );
           final Offset position = Offset(
               left, // Calculate X position
               top // Calculate Y position
