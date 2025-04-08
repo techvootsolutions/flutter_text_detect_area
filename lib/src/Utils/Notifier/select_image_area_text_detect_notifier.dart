@@ -4,7 +4,6 @@ import 'package:crop_your_image/crop_your_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_text_detect_area/src/Utils/Helper/storage_helper.dart';
-// import 'package:google_ml_vision/google_ml_vision.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 typedef SelectAreaCallBack = void Function(dynamic p1);
@@ -82,23 +81,13 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier {
     setCroppedData = cropped;
     await File(tempPath).writeAsBytes(croppedData!);
 
-    // final GoogleVisionImage visionImage = GoogleVisionImage.fromFile(File(tempPath));
     String value = "";
-    // try {
-    //   var results = await recognizer.processImage(visionImage);
-    //   value = results.text!.replaceAll("\n", " ");
-    // } catch(e) {
-    //   print("TextDetectException : $e");
-    //   throw TextDetectException(e.toString());
-    // }
     try {
       var results =
           await textRecognizer.processImage(InputImage.fromFilePath(tempPath));
       value = results.text.replaceAll("\n", " ");
     } catch (e) {
       onDetectError?.call(e);
-      // value = TextDetectException(e.toString());
-      // throw TextDetectException(e.toString());
     }
     setProcessing = false;
     if (detectOneTime && itemProcessIndex == 0) {

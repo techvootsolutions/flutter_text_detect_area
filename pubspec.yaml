@@ -1,6 +1,6 @@
 name: flutter_text_detect_area
 description: Flutter Text Detect Area's text recognition can recognize/detect text from image's particular area by dragging/moving/panning area selector.
-version: 0.0.3
+version: 0.0.3+1
 homepage: https://github.com/techvootsolutions/flutter_text_detect_area
 
 environment:

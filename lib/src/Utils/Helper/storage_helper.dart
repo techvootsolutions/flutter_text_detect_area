@@ -57,19 +57,7 @@ class StorageHelper {
                 .height); // choose the size here, it will maintain aspect ratio
         return File("${await getGalleryDirectory()}/img_$rand.jpg")
           ..writeAsBytesSync(im.encodeJpg(smallerImage, quality: 73));
-      } else {
-        /*await VideoCompress.setLogLevel(0);
-        final MediaInfo? info = await VideoCompress.compressVideo(
-          file.path,
-          quality: VideoQuality.MediumQuality,
-          deleteOrigin: false,
-          includeAudio: true,
-        );
-        print(info!.path);
-        if (info != null) {
-          return File(info.path!);
-        }*/
-      }
+      } else {}
     } else {
       return file;
     }
