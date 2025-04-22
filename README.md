@@ -37,11 +37,15 @@ import 'package:flutter_text_detect_area/flutter_text_detect_area.dart';
 
 ---
 
-## 📸 Screenshots
+## 📸 Preview
 
-| Pick Image | Live Camera    | Single Text Detection   |
-|------------|----------------|-------------------------|
-| ![Pick](https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/android.gif) | ![Camera](https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/camera.gif) | ![Single Text Detection](https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/3.png) |
+| Pick Image (GIF) | Live Camera (GIF)           |
+|------------------|-----------------------------|
+| ![Pick](https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/android.gif) | ![Camera](https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/camera.gif) |
+
+| Multi Text Detection (PNG)  | Single Text Detection Camera (PNG) |
+|-----------------------------|------------------------------------|
+| ![Multi](https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/3.png) | ![Single](https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/6.png)        |
 
 ---
 
