@@ -2,6 +2,12 @@
 
 All notable changes to flutter_text_detect_area will be documented in this file
 
+## 1.0.0
+
+* Update flutter latest dependency
+* Change CHANGELOG.md file
+* Update README.md file
+
 ## 0.0.4
 
 * Update flutter latest dependency
