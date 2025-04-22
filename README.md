@@ -1,92 +1,147 @@
 # Flutter Text Detect Area
-The easy way to use this package for text recognition by selecting area over the images and live camera in Flutter. Flutter Text Detect Area's text recognition can recognize/detect text from image's particular area by dragging/moving/panning area selector. They can also be used to recognise text once and more by passing value of detect once as true/false and also can set enable/disable image interactions by passing value of enableImageInteractions.
 
-### Installing
+A Flutter plugin that enables text detection from **specific areas** of an image or live camera preview. Just drag/select the area you want to scan, and let it extract the text using ML Kit.
 
-1.  Add dependency to `pubspec.yaml`
+Perfect for scanning:
+- 🧾 Receipts image
+- 📄 Documents image
+- 📘 PDFs image
+- 🧠 Custom fields in images
 
-    *Get the latest version in the 'Installing' tab on [pub.dev](https://pub.dev/packages/flutter_text_detect_area)*
+---
 
-```dart
-  dependencies:
-      flutter_text_detect_area: <latest-version>
+## 🚀 Features
+
+- 📸 Supports both **live camera** and **gallery image** input
+- ✍️ Manual area selection (drag, resize, pan)
+- 🔁 Detect text once or continuously
+- 📱 Android & iOS support
+- ✅ Simple integration
+
+---
+
+## 📦 Installation
+
+Add to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  flutter_text_detect_area: <latest-version>
 ```
 
-2.  Import the package
+Import in your Dart file:
+
 ```dart
 import 'package:flutter_text_detect_area/flutter_text_detect_area.dart';
 ```
 
-## Screenshot
-<img src="https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/android.gif" width="280"> <img src="https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/camera.gif" width="280">
+---
 
-### Pick Image
-You can use <a src="https://pub.dev/packages/image_picker">`Image Picker`</a> for pick image from gallery/camera to pass the image for text `recognition/detection` by it's `particular areas`
+## 📸 Screenshots
+
+| Pick Image | Live Camera    | Single Text Detection   |
+|------------|----------------|-------------------------|
+| ![Pick](https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/android.gif) | ![Camera](https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/camera.gif) | ![Single Text Detection](https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/3.png) |
+
+---
+
+## 📂 Image Picker Setup
+
+Use the `image_picker` package to choose an image:
 
 ```dart
-import 'package:image_picker/image_picker.dart';
-
 final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
 ```
 
-### Text Recognition/Detection Through Select area over image
+---
 
-After getting the picked image, we can start doing text recognition by navigate to detection screen.
+## ✨ Example Usage
 
 ```dart
-​
-Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SelectImageAreaTextDetect(
-                                detectOnce: isDetectOnce,
-                                enableImageInteractions: enableImageInteractions,
-                                imagePath: pickedFile?.path ?? '',
-                                onDetectText: (v) {
-                                  setState(() {
-                                    ///For single detection
-                                    if (v is String) {
-                                      detectedValue = v;
-                                    }
-                                    ///For multiple area's detections
-                                    if (v is List) {
-                                      int counter = 0;
-                                      for (var element in v) {
-                                        detectedValue += "$counter. \t\t $element \n\n";
-                                        counter++;
-                                      }
-                                    }
-                                  });
-                                }, onDetectError: (error) {
-                                  print(error);
-                                  ///This error will occurred in Android only while user will try to crop image at max zoom level then ml kit will throw max 32 height/width exception
-                                  if(error is PlatformException && (error.message?.contains("InputImage width and height should be at least 32!") ?? false)) {
-                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Selected area should be able to crop image with at least 32 width and height.")));
-                              }
-},)));
+Navigator.of(context).push(
+  MaterialPageRoute(
+    builder: (context) => SelectImageAreaTextDetect(
+      detectOnce: true, // Set to false for continuous scan
+      enableImageInteractions: true,
+      imagePath: pickedFile?.path ?? '',
+      onDetectText: (value) {
+        if (value is String) {
+          print("Detected: $value");
+        } else if (value is List<String>) {
+          for (int i = 0; i < value.length; i++) {
+            print("${i + 1}. ${value[i]}");
+          }
+        }
+      },
+      onDetectError: (error) {
+        if (error is PlatformException &&
+            (error.message?.contains("InputImage width and height should be at least 32!") ?? false)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Selected area must be at least 32x32 pixels.")),
+          );
+        }
+      },
+    ),
+  ),
+);
 ```
 
-### Output
-If you'll pass detect once as true then the result of `Single Text Detection` is single dynamic value. 
+---
 
-Screenshot
------------
-<img src="https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/3.png" width="280">
+## 🔐 Permissions
 
-### Output
-If you'll pass detect once as false then the result of `Multiple Text Detection Through Particular Image's Area` list of dynamic values.
+### Android (`AndroidManifest.xml`)
 
-Screenshot
------------
-<img src="https://raw.githubusercontent.com/techvootsolutions/flutter_text_detect_area/main/images/6.png" width="280">
+```xml
+<uses-permission android:name="android.permission.CAMERA"/>
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+```
 
-## Example Project
-You can learn more from example project [here](https://github.com/techvootsolutions/flutter_text_detect_area/tree/main/example).
+### iOS (`Info.plist`)
 
-### Changelog
-<p>Please see <a href="https://pub.dev/packages/flutter_text_detect_area/changelog"><b>CHANGELOG </b></a>for more information what has changed recently.</p>
+```xml
+<key>NSCameraUsageDescription</key>
+<string>Need camera access for live scanning</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>Need photo access to pick images</string>
+```
 
-### Main Contributors
-<ul>
-  <li><a href="https://github.com/tvTushar">Tushar Chovatiya</a></li>
-  <li><a href="https://github.com/tvPrincy">Princy Varsani</a></li>
-  <li><a href="https://github.com/techkevin">Kevin Baldha</a></li>
-</ul>
+---
+
+## ✅ Platform Support
+
+| Platform | Supported |
+|----------|-----------|
+| Android  | ✅         |
+| iOS      | ✅         |
+| Web      | ❌         |
+
+---
+
+## 🔍 Output Format
+
+- If detecting once: returns `String`
+- If detecting multiple areas: returns `List<String>`
+
+---
+
+## 💡 Use Cases
+
+- Scan receipts for expenses
+- Extract fields from identity cards
+- Detect table content from scanned documents
+- Select and extract from academic papers or books
+
+---
+
+## 👨‍💻 Contributors
+
+- [Tushar Chovatiya](https://github.com/tusharchovatiya)
+- [Princy Varsani](https://github.com/princy-varsani)
+- [Kevin Baldha](https://github.com/Kevinbaldha)
+
+---
+
+## 📄 License
+
+This project is licensed under the [GNU GPLv3](LICENSE).
