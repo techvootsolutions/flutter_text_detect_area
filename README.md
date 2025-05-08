@@ -1,5 +1,13 @@
 # Flutter Text Detect Area
 
+[![pub package](https://img.shields.io/pub/v/flutter_text_detect_area.svg)](https://pub.dev/packages/flutter_text_detect_area)
+[![GitHub stars](https://img.shields.io/github/stars/techvootsolutions/flutter_text_detect_area?style=social)](https://github.com/techvootsolutions/flutter_text_detect_area)
+[![License: GPLv3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://github.com/techvootsolutions/flutter_text_detect_area/blob/main/LICENSE)
+[![Flutter Compatible](https://img.shields.io/badge/flutter-compatible-brightgreen.svg)](https://flutter.dev)
+[![Platform](https://img.shields.io/badge/platform-android%20%7C%20ios-blue)](https://flutter.dev)
+
+ ---
+
 A Flutter plugin that enables text detection from **specific areas** of an image or live camera preview. Just drag/select the area you want to scan, and let it extract the text using ML Kit.
 
 Perfect for scanning:
