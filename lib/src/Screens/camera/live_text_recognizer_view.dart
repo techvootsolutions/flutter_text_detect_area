@@ -48,8 +48,7 @@ class LiveTextRecognizerView extends StatefulWidget {
 class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
   LiveDetectorViewMode? _mode = LiveDetectorViewMode.liveFeed;
   TextRecognitionScript? _script = TextRecognitionScript.latin;
-  TextRecognizer? _textRecognizer =
-      TextRecognizer(script: TextRecognitionScript.latin);
+  TextRecognizer? _textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
   bool _canProcess = true;
   bool _isBusy = false;
   CustomPaint? _customPaint;
@@ -61,8 +60,7 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _mode = widget.initialDetectionMode;
       _script = widget.initialRecognitionScript ?? TextRecognitionScript.latin;
-      _textRecognizer =
-          TextRecognizer(script: _script ?? TextRecognitionScript.latin);
+      _textRecognizer = TextRecognizer(script: _script ?? TextRecognitionScript.latin);
       setState(() {});
     });
     // selectedTexts.clear();
@@ -170,8 +168,7 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
               top // Calculate Y position
               );
 
-          detectedTexts
-              .add(DetectedTextInfo(text: textBlock.text, position: position));
+          detectedTexts.add(DetectedTextInfo(text: textBlock.text, position: position));
         }
 
         if (mounted) {
