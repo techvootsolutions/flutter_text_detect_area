@@ -14,6 +14,11 @@ class CameraView extends StatefulWidget {
     this.onCameraFeedReady,
     this.onDetectorViewModeChanged,
     this.onCameraLensDirectionChanged,
+    this.onSelectionChanged,
+    required this.isFrozen,
+    required this.onFreezeToggle,
+    required this.interactionDisabled,
+    required this.onInteractionToggle,
     this.initialCameraLensDirection = CameraLensDirection.back,
   });
 
@@ -22,8 +27,13 @@ class CameraView extends StatefulWidget {
   final VoidCallback? onCameraFeedReady;
   final VoidCallback? onDetectorViewModeChanged;
   final Function(CameraLensDirection direction)? onCameraLensDirectionChanged;
+  final Function(bool isSelectionActive)? onSelectionChanged;
   final CameraLensDirection initialCameraLensDirection;
   final List<DetectedTextInfo> detectedTexts;
+  final bool isFrozen;
+  final Function(bool frozen) onFreezeToggle;
+  final bool interactionDisabled;
+  final Function(bool disabled) onInteractionToggle;
 
   @override
   State<CameraView> createState() => _CameraViewState();
@@ -40,6 +50,8 @@ class _CameraViewState extends State<CameraView> {
   double _maxAvailableExposureOffset = 0.0;
   double _currentExposureOffset = 0.0;
   bool _changingCameraLens = false;
+  bool _isSelectionActive = false;
+  int _manualRotation = 0; // 0, 90, 180, 270
 
   @override
   void initState() {
@@ -92,41 +104,82 @@ class _CameraViewState extends State<CameraView> {
                     child: widget.customPaint,
                   ),
           ),
-          SelectionArea(
-              onSelectionChanged: (v) {
-                // setState(() {
-                //   _changingSelection = v?.plainText.isNotEmpty ?? false;
-                // });
-              },
-              child: Stack(
-                  children: widget.detectedTexts.map((detectedText) {
-                return Positioned(
-                  left: detectedText.position.dx,
-                  top: detectedText.position.dy,
-                  child: Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withAlpha((0.5 * 255).toInt()),
+          AbsorbPointer(
+            absorbing: widget.interactionDisabled,
+            child: SelectionArea(
+                onSelectionChanged: (v) {
+                  final isActive = v?.plainText.isNotEmpty ?? false;
+                  if (_isSelectionActive != isActive) {
+                    setState(() {
+                      _isSelectionActive = isActive;
+                    });
+                    if (widget.onSelectionChanged != null) {
+                      widget.onSelectionChanged!(isActive);
+                    }
+                  }
+                },
+                child: Stack(
+                    children: widget.detectedTexts.map((detectedText) {
+                  return Positioned(
+                    key: ValueKey(
+                        detectedText.text + detectedText.position.toString()),
+                    left: detectedText.position.dx,
+                    top: detectedText.position.dy,
+                    child: RotatedBox(
+                      quarterTurns: _manualRotation ~/ 90,
+                      child: Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withAlpha((0.5 * 255).toInt()),
+                        ),
+                        child: Text(
+                          detectedText.text,
+                          style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black),
+                        ),
+                      ),
                     ),
-                    child: Text(
-                      detectedText.text,
-                      style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black),
-                    ),
-                  ),
-                );
-              }).toList())),
+                  );
+                }).toList())),
+          ),
           // _zoomControl(),
           _backButton(),
           // _changingSelection ? _doneButton() : Container(),
           _switchLiveCameraToggle(),
+          _rotateDetectionButton(),
+          _freezeDetectionToggle(),
+          _interactionToggle(),
+          if (widget.isFrozen) _frozenIndicator(),
           // _exposureControl(),
         ],
       ),
     );
   }
+
+  Widget _frozenIndicator() => Positioned(
+        top: 40,
+        left: 0,
+        right: 0,
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.redAccent.withAlpha(200),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Text(
+              "STATIC MODE (FROZEN)",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ),
+      );
 
   Widget _backButton() => Positioned(
         top: 40,
@@ -141,6 +194,49 @@ class _CameraViewState extends State<CameraView> {
             child: const Icon(
               Icons.arrow_back_ios_outlined,
               size: 20,
+            ),
+          ),
+        ),
+      );
+
+  Widget _freezeDetectionToggle() => Positioned(
+        top: 140,
+        right: 8,
+        child: SizedBox(
+          height: 40.0,
+          width: 40.0,
+          child: FloatingActionButton(
+            heroTag: Object(),
+            onPressed: () => widget.onFreezeToggle(!widget.isFrozen),
+            backgroundColor:
+                widget.isFrozen ? Colors.redAccent : Colors.black54,
+            child: Icon(
+              widget.isFrozen
+                  ? Icons.play_arrow_outlined
+                  : Icons.pause_outlined,
+              size: 25,
+            ),
+          ),
+        ),
+      );
+
+  Widget _interactionToggle() => Positioned(
+        top: 190,
+        right: 8,
+        child: SizedBox(
+          height: 40.0,
+          width: 40.0,
+          child: FloatingActionButton(
+            heroTag: Object(),
+            onPressed: () =>
+                widget.onInteractionToggle(!widget.interactionDisabled),
+            backgroundColor:
+                widget.interactionDisabled ? Colors.redAccent : Colors.black54,
+            child: Icon(
+              widget.interactionDisabled
+                  ? Icons.lock_outlined
+                  : Icons.lock_open_outlined,
+              size: 25,
             ),
           ),
         ),
@@ -162,6 +258,31 @@ class _CameraViewState extends State<CameraView> {
             onPressed: () => Navigator.of(context).pop(widget.detectedTexts),
             child: const Text(
               "Done",
+            ),
+          ),
+        ),
+      );
+
+  Widget _rotateDetectionButton() => Positioned(
+        top: 90,
+        right: 8,
+        child: SizedBox(
+          height: 40.0,
+          width: 40.0,
+          child: FloatingActionButton(
+            heroTag: Object(),
+            onPressed: () {
+              setState(() {
+                _manualRotation = (_manualRotation + 90) % 360;
+              });
+            },
+            backgroundColor: Colors.black54,
+            child: RotationTransition(
+              turns: AlwaysStoppedAnimation(_manualRotation / 360),
+              child: const Icon(
+                Icons.screen_rotation_outlined,
+                size: 25,
+              ),
             ),
           ),
         ),
@@ -347,6 +468,7 @@ class _CameraViewState extends State<CameraView> {
   }
 
   void _processCameraImage(CameraImage image) {
+    if (_isSelectionActive || widget.isFrozen) return;
     final inputImage = _inputImageFromCameraImage(image);
     if (inputImage == null) return;
     widget.onImage(inputImage);
@@ -365,79 +487,64 @@ class _CameraViewState extends State<CameraView> {
     final sensorOrientation = camera.sensorOrientation;
 
     // Determine rotation compensation based on platform
-    InputImageRotation? rotation;
-    if (Platform.isIOS) {
-      rotation =
-          InputImageRotation.rotation0deg; // iOS handles rotation differently
-    } else if (Platform.isAndroid) {
-      var rotationCompensation =
-          _orientations[_controller!.value.deviceOrientation];
-      if (rotationCompensation == null) return null;
+    InputImageRotation rotation;
+    var rotationCompensation =
+        _orientations[_controller!.value.deviceOrientation];
+    if (rotationCompensation == null) return null;
 
-      if (camera.lensDirection == CameraLensDirection.front) {
-        // Front-facing camera
-        rotationCompensation = (rotationCompensation + sensorOrientation) % 360;
-      } else {
-        // Back-facing camera
-        rotationCompensation =
-            (sensorOrientation - rotationCompensation + 360) % 360;
-      }
-
-      // Convert rotation compensation to InputImageRotation
-      rotation = InputImageRotation.rotation0deg;
-      switch (rotationCompensation) {
-        case 0:
-          rotation = InputImageRotation.rotation0deg;
-          break;
-        case 90:
-          rotation = InputImageRotation.rotation90deg;
-          break;
-        case 180:
-          rotation = InputImageRotation.rotation180deg;
-          break;
-        case 270:
-          rotation = InputImageRotation.rotation270deg;
-          break;
-      }
+    if (camera.lensDirection == CameraLensDirection.front) {
+      // Front-facing camera
+      rotationCompensation = (rotationCompensation + sensorOrientation) % 360;
+    } else {
+      // Back-facing camera
+      rotationCompensation =
+          (sensorOrientation - rotationCompensation + 360) % 360;
     }
 
-    if (rotation == null) return null;
+    // Apply manual rotation offset for physical rotation when system lock is ON
+    rotationCompensation = (rotationCompensation + _manualRotation) % 360;
+
+    // Convert rotation compensation to InputImageRotation
+    switch (rotationCompensation) {
+      case 90:
+        rotation = InputImageRotation.rotation90deg;
+        break;
+      case 180:
+        rotation = InputImageRotation.rotation180deg;
+        break;
+      case 270:
+        rotation = InputImageRotation.rotation270deg;
+        break;
+      case 0:
+      default:
+        rotation = InputImageRotation.rotation0deg;
+    }
 
     // Determine image format based on platform
     InputImageFormat format;
     if (Platform.isAndroid) {
-      format = InputImageFormat.nv21; // Android format
-    } else if (Platform.isIOS) {
-      format = InputImageFormat.yuv420; // iOS format
+      format = InputImageFormat.nv21;
     } else {
-      return null; // Unsupported platform
+      format = InputImageFormat.bgra8888;
     }
 
-    // Validate image format and planes
-    if (image.format.group != ImageFormatGroup.yuv420) return null;
-    if (image.planes.length != 3) {
-      return null; // Ensure correct number of planes
-    }
+    if (image.planes.isEmpty) return null;
 
     // Convert planes to bytes
-    final bytes = Uint8List(image.planes[0].bytes.length +
-        image.planes[1].bytes.length +
-        image.planes[2].bytes.length);
-    int offset = 0;
-    for (int i = 0; i < image.planes.length; i++) {
-      bytes.setRange(
-          offset, offset + image.planes[i].bytes.length, image.planes[i].bytes);
-      offset += image.planes[i].bytes.length;
+    final WriteBuffer allBytes = WriteBuffer();
+    for (final Plane plane in image.planes) {
+      allBytes.putUint8List(plane.bytes);
     }
+    final bytes = allBytes.done().buffer.asUint8List();
 
     // Create InputImage using bytes and metadata
     return InputImage.fromBytes(
       bytes: bytes,
       metadata: InputImageMetadata(
         size: Size(image.width.toDouble(), image.height.toDouble()),
-        rotation: rotation,
-        format: format,
-        bytesPerRow: image.planes[0].bytesPerRow,
+        rotation: rotation, // used only in Android
+        format: format, // used only in iOS
+        bytesPerRow: image.planes[0].bytesPerRow, // used only in iOS
       ),
     );
   }

@@ -85,7 +85,7 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier {
     try {
       var results =
           await textRecognizer.processImage(InputImage.fromFilePath(tempPath));
-      value = results.text.replaceAll("\n", " ");
+      value = results.text;
     } catch (e) {
       onDetectError?.call(e);
     }
