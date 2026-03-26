@@ -48,7 +48,8 @@ class CustomScriptDropdownState extends State<CustomScriptDropdown> {
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(color: Colors.black),
           ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
           // labelText: 'Select Your Script',
           // labelStyle: TextStyle(color: Colors.black),
         ),
