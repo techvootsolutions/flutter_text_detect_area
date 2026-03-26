@@ -2,6 +2,13 @@
 
 All notable changes to flutter_text_detect_area will be documented in this file
 
+## 2.0.0
+
+* Update flutter latest dependency
+* Implement camera & text freeze functionality
+* Change CHANGELOG.md file
+* Update README.md file
+
 ## 1.0.1
 
 * Change CHANGELOG.md file
