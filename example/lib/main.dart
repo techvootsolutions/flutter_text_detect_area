@@ -66,154 +66,154 @@ class _MyHomePageState extends State<MyHomePage> {
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
-                const SizedBox(height: 20),
-                _buildCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text("Detection Mode",
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white)),
-                      const SizedBox(height: 10),
-                      ToggleButtons(
-                        borderRadius: BorderRadius.circular(10),
-                        isSelected: [isDetectOnce, !isDetectOnce],
-                        selectedColor: Colors.white,
-                        fillColor: Colors.blueAccent,
-                        color: Colors.grey,
-                        borderColor: Colors.grey,
-                        borderWidth: 0.5,
-                        selectedBorderColor: Colors.blueAccent,
-                        children: [
-                          Container(
-                              alignment: Alignment.center,
-                              width: MediaQuery.of(context).size.width * 0.38,
-                              child: const Text("Detect Once")),
-                          Container(
-                              alignment: Alignment.center,
-                              width: MediaQuery.of(context).size.width * 0.38,
-                              child: const Text("Detect More")),
-                        ],
-                        onPressed: (index) {
-                          setState(() {
-                            detectedValue = "";
-                            isDetectOnce = index == 0;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      ListTile(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        dense: true,
-                        onTap: () {
-                          setState(() {
-                            enableImageInteractions = !enableImageInteractions;
-                          });
-                        },
-                        title: Text(
-                            "${enableImageInteractions ? "Disable" : "Enable"} User Interactions Over Image",
-                            style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey)),
-                        trailing: Switch(
-                          activeTrackColor: Colors.blueAccent,
-                          value: enableImageInteractions,
-                          onChanged: (v) {
+                // const SizedBox(height: 20),
+                Expanded(
+                    child: ListView(shrinkWrap: true, children: [
+                  _buildCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("Detection Mode",
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white)),
+                        const SizedBox(height: 10),
+                        ToggleButtons(
+                          borderRadius: BorderRadius.circular(10),
+                          isSelected: [isDetectOnce, !isDetectOnce],
+                          selectedColor: Colors.white,
+                          fillColor: Colors.blueAccent,
+                          color: Colors.grey,
+                          borderColor: Colors.grey,
+                          borderWidth: 0.5,
+                          selectedBorderColor: Colors.blueAccent,
+                          children: [
+                            Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.of(context).size.width * 0.38,
+                                child: const Text("Detect Once")),
+                            Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.of(context).size.width * 0.38,
+                                child: const Text("Detect More")),
+                          ],
+                          onPressed: (index) {
                             setState(() {
-                              enableImageInteractions = v;
+                              detectedValue = "";
+                              isDetectOnce = index == 0;
                             });
                           },
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                _buildButton("Pick Image And Detect Text", () async {
-                  setState(() {
-                    detectedValue = cameraDetectedValue = "";
-                  });
-                  final pickedFile = await ImagePicker()
-                      .pickImage(source: ImageSource.gallery);
-                  if (!context.mounted) return;
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SelectImageAreaTextDetect(
-                      showLangScriptDropDown: true,
-                      detectOnce: isDetectOnce,
-                      enableImageInteractions: enableImageInteractions,
-                      imagePath: pickedFile?.path ?? '',
-                      onDetectText: (v) {
-                        setState(() {
-                          ///For single detection
-                          if (v is String) {
-                            detectedValue = v;
-                          }
-
-                          ///For multiple area's detections
-                          if (v is List) {
-                            int counter = 0;
-                            for (var element in v) {
-                              detectedValue += "$counter. \t\t $element \n\n";
-                              counter++;
-                            }
-                          }
-                        });
-                      },
-                      onDetectError: (error) {
-                        if (error is PlatformException &&
-                            (error.message?.contains(
-                                    "InputImage width and height should be at least 32!") ??
-                                false)) {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            content: Text(
-                                "Selected area should be at least 32x32 pixels."),
-                          ));
-                        }
-                      },
-                    ),
-                  ));
-                }),
-                const SizedBox(height: 15),
-                _buildButton("Live Text Detect Camera", () async {
-                  setState(() {
-                    detectedValue = cameraDetectedValue = "";
-                  });
-                  var values =
-                      await Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Stack(
-                      children: [
-                        LiveTextRecognizerView(
-                            initialRecognitionScript: initialRecognitionScript,
-                            showLangScriptDropDown: true),
+                        const SizedBox(height: 20),
+                        ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          dense: true,
+                          onTap: () {
+                            setState(() {
+                              enableImageInteractions =
+                                  !enableImageInteractions;
+                            });
+                          },
+                          title: Text(
+                              "${enableImageInteractions ? "Disable" : "Enable"} User Interactions Over Image",
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey)),
+                          trailing: Switch(
+                            activeTrackColor: Colors.blueAccent,
+                            value: enableImageInteractions,
+                            onChanged: (v) {
+                              setState(() {
+                                enableImageInteractions = v;
+                              });
+                            },
+                          ),
+                        ),
                       ],
                     ),
-                  ));
-                  setState(() {
-                    if (values is List) {
-                      int counter = 0;
-                      for (var element in values) {
-                        cameraDetectedValue +=
-                            "$counter. \t\t ${(element as DetectedTextInfo).text} \n\n";
-                        counter++;
+                  ),
+                  const SizedBox(height: 20),
+                  _buildButton("Pick Image And Detect Text", () async {
+                    setState(() {
+                      detectedValue = cameraDetectedValue = "";
+                    });
+                    final pickedFile = await ImagePicker()
+                        .pickImage(source: ImageSource.gallery);
+                    if (!context.mounted) return;
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => SelectImageAreaTextDetect(
+                        showLangScriptDropDown: true,
+                        detectOnce: isDetectOnce,
+                        enableImageInteractions: enableImageInteractions,
+                        imagePath: pickedFile?.path ?? '',
+                        onDetectText: (v) {
+                          setState(() {
+                            ///For single detection
+                            if (v is String) {
+                              detectedValue = v;
+                            }
+
+                            ///For multiple area's detections
+                            if (v is List) {
+                              int counter = 0;
+                              for (var element in v) {
+                                detectedValue += "$counter. \t\t $element \n\n";
+                                counter++;
+                              }
+                            }
+                          });
+                        },
+                        onDetectError: (error) {
+                          if (error is PlatformException &&
+                              (error.message?.contains(
+                                      "InputImage width and height should be at least 32!") ??
+                                  false)) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text(
+                                  "Selected area should be at least 32x32 pixels."),
+                            ));
+                          }
+                        },
+                      ),
+                    ));
+                  }),
+                  const SizedBox(height: 15),
+                  _buildButton("Live Text Detect Camera", () async {
+                    setState(() {
+                      detectedValue = cameraDetectedValue = "";
+                    });
+                    var values =
+                        await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => Stack(
+                        children: [
+                          LiveTextRecognizerView(
+                              initialRecognitionScript:
+                                  initialRecognitionScript,
+                              showLangScriptDropDown: true),
+                        ],
+                      ),
+                    ));
+                    setState(() {
+                      if (values is List) {
+                        cameraDetectedValue = values
+                            .map((e) => (e as DetectedTextInfo).text)
+                            .join("\n");
                       }
-                    }
-                  });
-                }),
-                const SizedBox(height: 20),
-                Text(
-                    '${cameraDetectedValue.isNotEmpty || !isDetectOnce ? "Multiple" : "Single"} Detected Text :',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(color: Colors.white)),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: Card(
+                    });
+                  }),
+                  const SizedBox(height: 20),
+                  Text(
+                      '${cameraDetectedValue.isNotEmpty || !isDetectOnce ? "Multiple" : "Single"} Detected Text :',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(color: Colors.white)),
+                  const SizedBox(height: 10),
+                  Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -240,7 +240,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ),
-                ),
+                  const SizedBox(height: 20),
+                ]))
               ],
             ),
           ),

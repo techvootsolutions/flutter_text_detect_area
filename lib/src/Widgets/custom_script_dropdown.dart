@@ -28,7 +28,7 @@ class CustomScriptDropdownState extends State<CustomScriptDropdown> {
       padding: EdgeInsets.only(
           top: 40, left: size.width * 0.3, right: size.width * 0.3),
       child: DropdownButtonFormField<TextRecognitionScript>(
-        value: selectedScript,
+        initialValue: selectedScript,
         // icon: Icon(Icons.arrow_downward),
         iconEnabledColor: Colors.black,
         iconDisabledColor: Colors.black,

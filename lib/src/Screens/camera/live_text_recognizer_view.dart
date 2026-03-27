@@ -52,6 +52,8 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
       TextRecognizer(script: TextRecognitionScript.latin);
   bool _canProcess = true;
   bool _isBusy = false;
+  bool _isFrozen = false;
+  bool _isInteractionDisabled = false;
   CustomPaint? _customPaint;
   final _cameraLensDirection = CameraLensDirection.back;
   List<DetectedTextInfo> detectedTexts = [];
@@ -97,6 +99,11 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
                   onCameraLensDirectionChanged:
                       widget.onCameraLensDirectionChanged,
                   detectedTexts: detectedTexts,
+                  isFrozen: _isFrozen,
+                  onFreezeToggle: (v) => setState(() => _isFrozen = v),
+                  interactionDisabled: _isInteractionDisabled,
+                  onInteractionToggle: (v) =>
+                      setState(() => _isInteractionDisabled = v),
                 )
               : const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -137,7 +144,7 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
 
   void _processImage(InputImage inputImage) {
     if (!_canProcess) return;
-    if (_isBusy) return;
+    if (_isBusy || _isFrozen) return;
     _isBusy = true;
     Size size = MediaQuery.of(context).size;
     try {

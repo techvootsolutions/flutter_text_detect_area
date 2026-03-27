@@ -14,20 +14,20 @@ Route createRoute(Widget widget, {int duration = 0}) {
   );
 }
 
-pushReplacement(BuildContext context, Widget destination,
+void pushReplacement(BuildContext context, Widget destination,
     {bool isAnimate = false}) {
   Navigator.of(context).pushReplacement(isAnimate
       ? createRoute(destination)
       : MaterialPageRoute(builder: (context) => destination));
 }
 
-push(BuildContext context, Widget destination, {bool isAnimate = false}) {
+void push(BuildContext context, Widget destination, {bool isAnimate = false}) {
   Navigator.of(context).push(isAnimate
       ? createRoute(destination)
       : MaterialPageRoute(builder: (context) => destination));
 }
 
-pushAndRemoveUntil(BuildContext context, Widget destination, bool predict,
+void pushAndRemoveUntil(BuildContext context, Widget destination, bool predict,
     {bool isAnimate = false}) {
   Navigator.of(context).pushAndRemoveUntil(
       isAnimate

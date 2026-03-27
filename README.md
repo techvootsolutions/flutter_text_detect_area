@@ -21,7 +21,7 @@ Perfect for scanning:
 ## 🚀 Features
 
 - 📸 Supports both **live camera** and **gallery image** input
-- ✍️ Manual area selection (drag, resize, pan)
+- ✍️ Manual area selection (drag, resize, pan, freeze)
 - 🔁 Detect text once or continuously
 - 📱 Android & iOS support
 - ✅ Simple integration
