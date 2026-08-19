@@ -7,15 +7,14 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 class StorageHelper {
-  /// /storage/emulated/0/Android/data/com.example.snapshop/files/MyGallery
+  /// Gets the local gallery/cache directory for temporary processing
   static Future<String> getGalleryDirectory() async {
     final Directory? directory;
-    if (Platform.isAndroid) {
+    if (!kIsWeb && Platform.isAndroid) {
       directory = await getExternalStorageDirectory();
     } else {
       directory = (await getApplicationDocumentsDirectory());
     }
-    // final directory = await getExternalStorageDirectory();
     final myImagePath = '${directory!.path}/MyGallery';
     return myImagePath;
   }
@@ -24,7 +23,7 @@ class StorageHelper {
     final myGalleryPath = await getGalleryDirectory();
     final filePath = '$myGalleryPath/$fileName';
     if (!await Directory(myGalleryPath).exists()) {
-      await Directory(myGalleryPath).create();
+      await Directory(myGalleryPath).create(recursive: true);
     }
     File fileDef = File(filePath);
     await fileDef.create(recursive: true);
@@ -33,31 +32,36 @@ class StorageHelper {
     return File(filePath);
   }
 
-  static bool isImageFile(File file) =>
-      path.extension(file.path).endsWith(".jpg") ||
-              path.extension(file.path).endsWith(".jpeg")
-          ? true
-          : false;
+  static bool isImageFile(File file) {
+    final ext = path.extension(file.path).toLowerCase();
+    return ext == '.jpg' ||
+        ext == '.jpeg' ||
+        ext == '.png' ||
+        ext == '.webp' ||
+        ext == '.bmp';
+  }
 
   static Future<File?> compressImageAndVideo(File file) async {
-    // if (file == null) {
-    //   return null;
-    // }
     bool isImage = isImageFile(file);
-    final bytes = file.readAsBytesSync().lengthInBytes;
+    final bytes = (await file.readAsBytes()).lengthInBytes;
     final kb = bytes / 1024;
     final mb = kb / 1024;
     if (isImage && mb > 1 || !isImage && mb > 2) {
       if (isImage) {
         int rand = math.Random().nextInt(10000);
-        im.Image image = im.decodeImage(file.readAsBytesSync())!;
+        final fileBytes = await file.readAsBytes();
+        im.Image? image = im.decodeImage(fileBytes);
+        if (image == null) return file;
         im.Image smallerImage = im.copyResize(image,
             width: image.width,
             height: image
                 .height); // choose the size here, it will maintain aspect ratio
-        return File("${await getGalleryDirectory()}/img_$rand.jpg")
-          ..writeAsBytesSync(im.encodeJpg(smallerImage, quality: 73));
-      } else {}
+        final galleryDir = await getGalleryDirectory();
+        final compressedFile = File("$galleryDir/img_$rand.jpg");
+        await compressedFile
+            .writeAsBytes(im.encodeJpg(smallerImage, quality: 73));
+        return compressedFile;
+      }
     } else {
       return file;
     }

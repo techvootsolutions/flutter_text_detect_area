@@ -60,18 +60,20 @@ class _CameraViewState extends State<CameraView> {
   }
 
   void _initialize() async {
-    if (_cameras.isEmpty) {
-      _cameras = await availableCameras();
-    }
-    for (var i = 0; i < _cameras.length; i++) {
-      if (_cameras[i].lensDirection == widget.initialCameraLensDirection) {
-        _cameraIndex = i;
-        break;
+    try {
+      if (_cameras.isEmpty) {
+        _cameras = await availableCameras();
       }
-    }
-    if (_cameraIndex != -1) {
-      _startLiveFeed();
-    }
+      for (var i = 0; i < _cameras.length; i++) {
+        if (_cameras[i].lensDirection == widget.initialCameraLensDirection) {
+          _cameraIndex = i;
+          break;
+        }
+      }
+      if (_cameraIndex != -1) {
+        _startLiveFeed();
+      }
+    } catch (_) {}
   }
 
   @override
@@ -86,9 +88,15 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Widget _liveFeedBody() {
-    if (_cameras.isEmpty) return Container();
-    if (_controller == null) return Container();
-    if (_controller?.value.isInitialized == false) return Container();
+    if (_cameras.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    if (_controller == null) {
+      return const SizedBox.shrink();
+    }
+    if (_controller?.value.isInitialized == false) {
+      return const SizedBox.shrink();
+    }
     return Container(
       color: Colors.black,
       child: Stack(
@@ -130,7 +138,7 @@ class _CameraViewState extends State<CameraView> {
                       child: Container(
                         padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
-                          color: Colors.white.withAlpha((0.5 * 255).toInt()),
+                          color: Colors.white.withValues(alpha: 0.5),
                         ),
                         child: Text(
                           detectedText.text,
@@ -166,7 +174,7 @@ class _CameraViewState extends State<CameraView> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.redAccent.withAlpha(200),
+              color: Colors.redAccent.withValues(alpha: 200 / 255),
               borderRadius: BorderRadius.circular(20),
             ),
             child: const Text(
@@ -453,8 +461,12 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Future _stopLiveFeed() async {
-    await _controller?.stopImageStream();
-    await _controller?.dispose();
+    try {
+      await _controller?.stopImageStream();
+    } catch (_) {}
+    try {
+      await _controller?.dispose();
+    } catch (_) {}
     _controller = null;
   }
 
