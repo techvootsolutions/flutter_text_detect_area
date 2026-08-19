@@ -48,31 +48,26 @@ class LiveTextRecognizerView extends StatefulWidget {
 class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
   LiveDetectorViewMode? _mode = LiveDetectorViewMode.liveFeed;
   TextRecognitionScript? _script = TextRecognitionScript.latin;
-  TextRecognizer? _textRecognizer =
-      TextRecognizer(script: TextRecognitionScript.latin);
+  TextRecognizer? _textRecognizer;
   bool _canProcess = true;
   bool _isBusy = false;
   bool _isFrozen = false;
   bool _isInteractionDisabled = false;
+  bool _isPopping = false;
   CustomPaint? _customPaint;
   final _cameraLensDirection = CameraLensDirection.back;
   List<DetectedTextInfo> detectedTexts = [];
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _mode = widget.initialDetectionMode;
-      _script = widget.initialRecognitionScript ?? TextRecognitionScript.latin;
-      _textRecognizer =
-          TextRecognizer(script: _script ?? TextRecognitionScript.latin);
-      setState(() {});
-    });
-    // selectedTexts.clear();
     super.initState();
+    _mode = widget.initialDetectionMode;
+    _script = widget.initialRecognitionScript ?? TextRecognitionScript.latin;
+    _textRecognizer = TextRecognizer(script: _script!);
   }
 
   @override
-  void dispose() async {
+  void dispose() {
     _canProcess = false;
     _textRecognizer?.close();
     super.dispose();
@@ -81,12 +76,13 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (v, value) {
-        if (v) {
+      canPop: _isPopping,
+      onPopInvokedWithResult: (didPop, value) {
+        if (didPop) {
           return;
         }
-        Navigator.pop(context, detectedTexts);
+        _isPopping = true;
+        Navigator.of(context).pop(detectedTexts);
       },
       child: Scaffold(
         body: Stack(children: [
@@ -124,7 +120,7 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
                       });
                     }
                   })
-              : Container(),
+              : const SizedBox.shrink(),
         ]),
       ),
     );
@@ -142,22 +138,19 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
     setState(() {});
   }
 
-  void _processImage(InputImage inputImage) {
+  Future<void> _processImage(InputImage inputImage) async {
     if (!_canProcess) return;
     if (_isBusy || _isFrozen) return;
     _isBusy = true;
     Size size = MediaQuery.of(context).size;
     try {
-      _textRecognizer?.processImage(inputImage).then((recognizedText) {
-        _isBusy = false;
-
+      final recognizedText = await _textRecognizer?.processImage(inputImage);
+      if (recognizedText != null) {
         // Clear previous detected texts
         detectedTexts.clear();
 
         // Store detected text information
         for (final textBlock in recognizedText.blocks) {
-          // Calculate positions based on your logic
-          // Example: Use translateX and translateY functions as per your requirements
           final left = translateX(
             textBlock.boundingBox.left,
             size,
@@ -172,10 +165,7 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
             inputImage.metadata!.rotation,
             _cameraLensDirection,
           );
-          final Offset position = Offset(
-              left, // Calculate X position
-              top // Calculate Y position
-              );
+          final Offset position = Offset(left, top);
 
           detectedTexts
               .add(DetectedTextInfo(text: textBlock.text, position: position));
@@ -184,9 +174,11 @@ class _LiveTextRecognizerViewState extends State<LiveTextRecognizerView> {
         if (mounted) {
           setState(() {});
         }
-      });
-    } catch (e) {
-      // print(e);
+      }
+    } catch (_) {
+      // Ignored for live preview frames
+    } finally {
+      _isBusy = false;
     }
   }
 }

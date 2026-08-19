@@ -1,0 +1,19 @@
+# Files and directories to ignore when publishing to pub.dev
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+images/
+android/
+ios/
+macos/
+windows/
+linux/
+.idea/
+.vscode/
+.DS_Store
+*.log
+

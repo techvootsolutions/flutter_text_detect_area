@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:crop_your_image/crop_your_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_text_detect_area/src/Element/padding_class.dart';
 import 'package:flutter_text_detect_area/src/Style/text_style.dart';
 import 'package:flutter_text_detect_area/src/Utils/Notifier/select_image_area_text_detect_notifier.dart';
 import 'package:flutter_text_detect_area/src/Widgets/custom_script_dropdown.dart';
@@ -36,8 +35,12 @@ class SelectImageAreaTextDetect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (imagePath.isEmpty) {
-      Navigator.of(context).pop();
-      return Container();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
+      });
+      return const SizedBox.shrink();
     }
     return ChangeNotifierProvider(
       create: (_) => SelectImageAreaTextDetectNotifier(),
@@ -105,7 +108,7 @@ class SelectImageAreaTextDetectProviderState
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            paddingTop(5),
+            const SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -114,18 +117,18 @@ class SelectImageAreaTextDetectProviderState
                   size: 22,
                   color: Colors.white,
                 ),
-                paddingRight(10),
+                const SizedBox(width: 10),
                 Text("Drag the rectangle to the",
                     style: TextStyleTheme.customTextStyle(
                         Colors.white, 16, FontWeight.w900)),
-                paddingRight(5),
+                const SizedBox(width: 5),
                 Text("text",
                     style: TextStyleTheme.customTextStyle(
                             Colors.blue, 16, FontWeight.w900)
                         .apply(decoration: TextDecoration.underline))
               ],
             ),
-            paddingTop(20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -221,7 +224,7 @@ class SelectImageAreaTextDetectProviderState
                         }
                       },
                     )
-                  : Container(),
+                  : const SizedBox.shrink(),
               Expanded(
                   child: Stack(children: [
                 // state.isProcessing == false ?
@@ -256,7 +259,7 @@ class SelectImageAreaTextDetectProviderState
                 state.isImageLoading
                     ? const Center(
                         child: CircularProgressIndicator(color: Colors.white))
-                    : Container(),
+                    : const SizedBox.shrink(),
               ])),
               Container(
                 height: size.height * 0.18,

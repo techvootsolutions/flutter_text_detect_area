@@ -2,12 +2,17 @@
 
 All notable changes to flutter_text_detect_area will be documented in this file
 
-## 2.0.0
+## 1.0.2
 
-* Update flutter latest dependency
-* Implement camera & text freeze functionality
-* Change CHANGELOG.md file
-* Update README.md file
+* Implement camera freeze, manual rotation, and selection lock functionality for live text recognition.
+* Fix `TextRecognizer` memory leaks by closing recognizer instances properly on dispose.
+* Fix unhandled `FileSystemException` during temporary file deletion on dispose.
+* Await async image saving in notifier initialization.
+* Optimize package archive size on pub.dev using `.pubignore`.
+* Update dependencies to latest compatible versions (`google_mlkit_text_recognition: ^0.16.0`, `camera: ^0.12.0+2`, `image: ^4.8.0`, `provider: ^6.1.5+1`).
+* Modernize Color APIs to `withValues()` and use `const SizedBox.shrink()` for cleaner widget builds.
+* Fix safe navigation pop scheduling when image path is empty.
+* Enhance camera error handling and back navigation with `PopScope`.
 
 ## 1.0.1
 

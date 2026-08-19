@@ -6,8 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_text_detect_area/src/Utils/Helper/storage_helper.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
-typedef SelectAreaCallBack = void Function(dynamic p1);
-typedef OnDetectErrorCallBack = void Function(dynamic error);
+typedef SelectAreaCallBack = void Function(dynamic detectedResult);
+typedef OnDetectErrorCallBack = void Function(Object error);
 
 class CustomException implements Exception {
   final dynamic message;
@@ -113,7 +113,7 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier {
 
   void initTempImage() async {
     tempPath = await StorageHelper.getGalleryDirectory() + fileName;
-    StorageHelper.saveFileToDirectory(fileName, File(selectedImagePath));
+    await StorageHelper.saveFileToDirectory(fileName, File(selectedImagePath));
     notifyListeners();
   }
 
@@ -137,8 +137,14 @@ class SelectImageAreaTextDetectNotifier extends ChangeNotifier {
 
   @override
   void dispose() {
+    textRecognizer.close();
     if (tempPath.isNotEmpty) {
-      File(tempPath).deleteSync();
+      try {
+        final tempFile = File(tempPath);
+        if (tempFile.existsSync()) {
+          tempFile.deleteSync();
+        }
+      } catch (_) {}
     }
     isDisposed = true;
     super.dispose();
